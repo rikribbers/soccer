@@ -1,0 +1,47 @@
+﻿@page "{id}"
+
+@model Poule.Pages.Games.EditModel
+
+<form method="post">
+    
+    <input type="hidden" asp-for="Id"/>
+
+    <div>
+        <label asp-for="Game.Order"></label>
+        <input asp-for="Game.Order"/>
+        <span asp-validation-for="Game.Order"></span>
+    </div>
+    <div>
+        <label asp-for="Game.Date"></label>
+        <input asp-for="Game.Date"/>
+        <span asp-validation-for="Game.Date"></span>
+    </div>
+    <div>
+        <label asp-for="Game.HomeTeam"></label>
+        <input asp-for="Game.HomeTeam"/>
+        <span asp-validation-for="Game.HomeTeam"></span>
+    </div>
+    <div>
+        <label asp-for="Game.AwayTeam"></label>
+        <input asp-for="Game.AwayTeam"/>
+        <span asp-validation-for="Game.AwayTeam"></span>
+    </div>
+    <div>
+        <label asp-for="Game.HalftimeScore"></label>
+        <input asp-for="Game.HalftimeScore"/>
+        <span asp-validation-for="Game.HalftimeScore"></span>
+    </div>
+    <div>
+        <label asp-for="Game.FulltimeScore"></label>
+        <input asp-for="Game.FulltimeScore"/>
+        <span asp-validation-for="Game.FulltimeScore"></span>
+    </div>
+    <div>
+        <label asp-for="Game.Round"></label>
+        <select asp-for="Game.Round" asp-items="Html.GetEnumSelectList<RoundType>()"></select>
+        <span asp-validation-for="Game.Round"></span>
+    </div>
+
+    <input type="submit" name="save" value="Save"/>
+</form>
+

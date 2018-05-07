@@ -1,0 +1,25 @@
+﻿@page
+@model Poule.Pages.Users.CreateModel
+
+@{
+    ViewBag.Title = "Aanmaken Gebruiker";
+}
+<form method="post">
+
+    <div>
+        <label asp-for="User.Order"></label>
+        <input asp-for="User.Order" />
+        <span asp-validation-for="User.Order"></span>
+    </div>
+    <div>
+        <label asp-for="User.Name"></label>
+        <input asp-for="User.Name" />
+        <span asp-validation-for="User.Name"></span>
+    </div>
+    <div>
+        <label asp-for="User.EmailAddress"></label>
+        <input asp-for="User.EmailAddress" />
+        <span asp-validation-for="User.EmailAddress"></span>
+    </div>
+    <input type="submit" name="save" value="Save" />
+</form>

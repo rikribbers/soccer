@@ -1,0 +1,57 @@
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Poule.Entities;
+using Poule.Services;
+using Poule.ViewModel;
+
+namespace Poule.Pages
+{
+    public class ScoreboardModel : PageModel
+    {
+        private readonly IPredictionData _predictionData;
+        private readonly IUserData _userData;
+        public IEnumerable<Prediction> Predictions { get; set; }
+        public IEnumerable<Game> Games { get; set; }
+
+        public IEnumerable<User> Users { get; set; }
+
+        public ScoreboardModel(IPredictionData predictionData,IUserData userData)
+        {
+            _predictionData = predictionData;
+            _userData = userData;
+        }
+
+        public IActionResult OnGet()
+        {
+            Predictions = _predictionData.GetAll();
+            Games = Predictions.Select(p => p.Game).OrderBy(g => g.Order);
+            Users = _userData.GetAll();
+            return Page();
+        }
+
+        public ScoreModel GetScoreForUser(Game game, int user)
+        {
+            // return ordered list of predictions for a game
+            var prediction =  Predictions.Where(p => p.Game.Id == game.Id).FirstOrDefault( p => p.User.Id == user);
+            var score = new ScoreModel();
+            if (prediction != null)
+            {
+                score.HalftimeScore = prediction.HalftimeScore;
+                score.FulltimeScore = prediction.FulltimeScore;
+                score.Points  = CalculateScore(game.HalftimeScore, game.FulltimeScore, prediction.HalftimeScore,prediction.FulltimeScore);
+            };
+            return score;
+        }
+
+        private int CalculateScore(string gameHalftimeScore, string gameFulltimeScore, string predictionHalftimeScore, string predictionFulltimeScore)
+        {
+            int points = 0;
+            if (gameHalftimeScore!= null && gameHalftimeScore.Equals(predictionHalftimeScore)) points++;
+            if (gameFulltimeScore != null && gameFulltimeScore.Equals(predictionFulltimeScore)) points++;
+            if (points == 2) points++;
+            return points;
+        }
+    }
+}

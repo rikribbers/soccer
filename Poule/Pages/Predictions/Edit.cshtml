@@ -1,0 +1,41 @@
+﻿@page "{id}"
+
+@model Poule.Pages.Predictions.EditModel
+
+<form method="post">
+    
+    <input type="hidden" asp-for="Id"/>
+
+    <div>
+        <label asp-for="Prediction.HomeTeam"></label>
+        <input  disabled="true" asp-for="Prediction.HomeTeam" />
+        <span asp-validation-for="Prediction.HomeTeam"></span>
+    </div>
+    <div>
+        <label asp-for="Prediction.AwayTeam"></label>
+        <input  disabled="true" asp-for="Prediction.AwayTeam" />
+        <span asp-validation-for="Prediction.AwayTeam"></span>
+    </div>
+    <div>
+        <label asp-for="Prediction.Username"></label>
+        <input disabled="true" asp-for="Prediction.Username" />
+        <span asp-validation-for="Prediction.Username"></span>
+    </div>
+    <div>
+        <label asp-for="Prediction.Username"></label>
+        <input disabled="true" asp-for="Prediction.Username" />
+        <span asp-validation-for="Prediction.Username"></span>
+    </div>
+    <div>
+        <label asp-for="Prediction.HalftimeScore"></label>
+        <input asp-for="Prediction.HalftimeScore" />
+        <span asp-validation-for="Prediction.HalftimeScore"></span>
+    </div>
+    <div>
+        <label asp-for="Prediction.FulltimeScore"></label>
+        <input asp-for="Prediction.FulltimeScore" />
+        <span asp-validation-for="Prediction.FulltimeScore"></span>
+    </div>
+    <input type="submit" name="save" value="Save"/>
+</form>
+

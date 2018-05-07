@@ -1,0 +1,20 @@
+﻿@page "{id}"
+@model Poule.Pages.Users.DetailsModel
+@{
+    ViewBag.Title = "Details Gebruiker";
+}
+
+<div>
+    <label asp-for="User.Order"></label>
+    <input disabled="true" asp-for="User.Order"/> 
+</div>
+<div>
+    <label asp-for="User.Name"></label>
+    <input disabled="true" asp-for="User.Name"/> 
+</div>
+<div>
+    <label asp-for="User.EmailAddress"></label>
+    <input disabled="true" asp-for="User.EmailAddress"/> 
+</div>
+
+<a asp-page="Index">Terug</a>

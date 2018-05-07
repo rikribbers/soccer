@@ -1,0 +1,37 @@
+﻿@page "{id}"
+@model Poule.Pages.Games.DetailsModel
+@{
+    ViewBag.Title = "Details Wedstrijd";
+}
+
+<div>
+    <label asp-for="Game.Order"></label>
+    <input disabled="true" asp-for="Game.Order"/> 
+</div>
+<div>
+    <label asp-for="Game.Date"></label>
+    <input disabled="true" asp-for="Game.Date"/> 
+</div>
+<div>
+    <label asp-for="Game.HomeTeam"></label>
+    <input disabled="true" asp-for="Game.HomeTeam"/> 
+</div>
+<div>
+    <label asp-for="Game.AwayTeam"></label>
+    <input disabled="true" asp-for="Game.AwayTeam"/> 
+</div>
+<div>
+    <label asp-for="Game.HalftimeScore"></label>
+    <input disabled="true" asp-for="Game.HalftimeScore"/> 
+</div>
+<div>
+    <label asp-for="Game.FulltimeScore"></label>
+    <input disabled="true" asp-for="Game.FulltimeScore"/> 
+</div>
+<div>
+    <label asp-for="Game.Round"></label>
+    <input disabled="true" asp-for="Game.Round"/> 
+</div>
+
+
+<a asp-page="Index">Terug</a>

@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  pouledb:
+    image: postgres:10-alpine
+    hostname: pouledb
+    container_name: pouledb
+    environment:
+      POSTGRES_PASSWORD: Doelpunt1!
+      POSTGRES_USER: MarcoVanBasten
+      POSTGRES_DB: poule
+    volumes:
+      - pgdata_poule:/var/lib/postgresql/data
+     
+  pouleweb:
+    image: poule
+    restart: unless-stopped
+    links:
+      - pouledb
+    ports:
+      - 8080:80
+    build:
+      context: .
+      dockerfile: Dockerfile
+      
+volumes:
+  pgdata_poule:

@@ -1,0 +1,28 @@
+﻿@page "{id}"
+@model MyPredictionsModel
+@{
+    ViewBag.Title = "Voorspellingen";
+}
+<form method="post">
+    <input type="hidden" asp-for="@Model.MyUser.Id"/>
+    <table>
+        @for (var i = 0; i < Model.Predictions.Count(); i++)
+        {
+        <tr>
+            <td>@Model.Predictions[i].HomeTeam</td>
+            <td>@Model.Predictions[i].AwayTeam </td>
+            <td>
+                <input asp-for="@Model.Predictions[i].HalftimeScore" />
+                <span asp-validation-for="@Model.Predictions[i].HalftimeScore"></span>
+            </td>
+            <td>
+                <input asp-for="@Model.Predictions[i].FulltimeScore" />
+                <span asp-validation-for="@Model.Predictions[i].FulltimeScore"></span>
+            </td>
+            <td><input type="hidden" asp-for="@Model.Predictions[i].Id" /></td>
+            <td><input type="hidden" asp-for="@Model.Predictions[i].GameId" /></td>
+        </tr>
+        }
+    </table>
+    <input type="submit" name="save" value="Save"/>
+</form>
