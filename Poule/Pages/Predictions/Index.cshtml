@@ -3,28 +3,35 @@
 @{
     ViewBag.Title = "Voorspellingen";
 }
-<table>
-    <thead>
-    <tr>
-        <th>Datum</th>
-        <th>Thuisteam</th>
-        <th>Uitteam</th>
-        <th>Naam</th>
-        <th>Ruststand</th>
-        <th>Eindstand</th>
-    </tr>
-    </thead>
-    @foreach (var item in Model.Predictions)
-    {
+<p></p>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
         <tr>
-            <td>@item.Game.Date</td>
-            <td>@item.Game.HomeTeam</td>
-            <td>@item.Game.AwayTeam</td>
-            <td>@item.User.Name</td>
-            <td>@item.HalftimeScore</td>
-            <td>@item.FulltimeScore</td>
-            <td><a asp-page="Details" asp-route-id="@item.Id">Details</a></td>
-            <td><a asp-page="Edit" asp-route-id="@item.Id">Edit</a></td>
+            <th>Datum</th>
+            <th>Thuisteam</th>
+            <th>Uitteam</th>
+            <th>Naam</th>
+            <th>Ruststand</th>
+            <th>Eindstand</th>
         </tr>
-    }
-</table>
+        </thead>
+        @foreach (var item in Model.Predictions)
+        {
+            <tr>
+                <td>@item.Game.Date</td>
+                <td>@item.Game.HomeTeam</td>
+                <td>@item.Game.AwayTeam</td>
+                <td>@item.User.Name</td>
+                <td>@item.HalftimeScore</td>
+                <td>@item.FulltimeScore</td>
+                <td>
+                    <a asp-page="Details" asp-route-id="@item.Id">Details</a>
+                </td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@item.Id">Edit</a>
+                </td>
+            </tr>
+        }
+    </table>
+</div>

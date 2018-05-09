@@ -3,37 +3,40 @@
 @{
     ViewBag.Title = "Wedstrijden";
 }
-<table>
-    <thead>
-    <tr>
-        <th>Id</th>
-        <th>Volgorde</th>
-        <th>Ronde</th>
-        <th>Thuisteam</th>
-        <th>Uitteam</th>
-        <th>Datum</th>
-        <th>Ruststand</th>
-        <th>Eindstand</th>
-    </tr>
-    </thead>
-    @foreach (var item in Model.Games)
-    {
-        <tr>
-            <td>@item.Id</td>
-            <td>@item.Order</td>
-            <td>@item.Round</td>
-            <td>@item.HomeTeam</td>
-            <td>@item.AwayTeam</td>
-            <td>@item.Date</td>
-            <td>@item.HalftimeScore</td>
-            <td>@item.FulltimeScore</td>
-            <td>
-                <a asp-page="Details" asp-route-id="@item.Id">Details</a>
-            </td>
-            <td>
-                <a asp-page="Edit" asp-route-id="@item.Id">Edit</a>
-            </td>
-        </tr>
-    }
-</table>
-<a asp-page="Create">Voeg een wedstrijd toe</a>
+<p></p>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Volgorde</th>
+                <th>Ronde</th>
+                <th>Thuisteam</th>
+                <th>Uitteam</th>
+                <th>Datum</th>
+                <th>Ruststand</th>
+                <th>Eindstand</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model.Games)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Order</td>
+                <td>@item.Round</td>
+                <td>@item.HomeTeam</td>
+                <td>@item.AwayTeam</td>
+                <td>@item.Date</td>
+                <td>@item.HalftimeScore</td>
+                <td>@item.FulltimeScore</td>
+                <td>
+                    <a asp-page="Details" asp-route-id="@item.Id">Details</a>
+                </td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@item.Id">Edit</a>
+                </td>
+            </tr>
+        }
+    </table>
+    <a asp-page="Create">Voeg een wedstrijd toe</a>
+</div>

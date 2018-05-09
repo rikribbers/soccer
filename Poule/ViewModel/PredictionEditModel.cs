@@ -1,10 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Poule.Entities;
 
 namespace Poule.ViewModel
 {
     public class PredictionEditModel
     {
+        [Display(Name = "Datum")]
+        public DateTime Date { get; set; }
+
         [Display(Name = "Thuisteam")]
         public string HomeTeam { get; set; }
 

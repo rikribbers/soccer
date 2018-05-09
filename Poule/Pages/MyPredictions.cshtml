@@ -3,26 +3,56 @@
 @{
     ViewBag.Title = "Voorspellingen";
 }
-<form method="post">
-    <input type="hidden" asp-for="@Model.MyUser.Id"/>
-    <table>
-        @for (var i = 0; i < Model.Predictions.Count(); i++)
-        {
-        <tr>
-            <td>@Model.Predictions[i].HomeTeam</td>
-            <td>@Model.Predictions[i].AwayTeam </td>
-            <td>
-                <input asp-for="@Model.Predictions[i].HalftimeScore" />
-                <span asp-validation-for="@Model.Predictions[i].HalftimeScore"></span>
-            </td>
-            <td>
-                <input asp-for="@Model.Predictions[i].FulltimeScore" />
-                <span asp-validation-for="@Model.Predictions[i].FulltimeScore"></span>
-            </td>
-            <td><input type="hidden" asp-for="@Model.Predictions[i].Id" /></td>
-            <td><input type="hidden" asp-for="@Model.Predictions[i].GameId" /></td>
-        </tr>
-        }
-    </table>
-    <input type="submit" name="save" value="Save"/>
-</form>
+<div class="container">
+    <form method="post">
+        <input type="hidden" asp-for="@Model.MyUser.Id"/>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Datum</th>
+                <th>Thuisteam</th>
+                <th>Uitteam</th>
+                <th>Ruststand</th>
+                <th>Eindstand</th>
+            </tr>
+            </thead>
+            @for (var i = 0; i < Model.Predictions.Count(); i++)
+            {
+                <tr>
+                    <td>@Model.Predictions[i].Date</td>
+                    <td>@Model.Predictions[i].HomeTeam</td>
+                    <td>@Model.Predictions[i].AwayTeam </td>
+                    <td>
+                        @if (Model.Predictions[i].Editable)
+                        {
+                            <input asp-for="@Model.Predictions[i].HalftimeScore"/>
+                        }
+                        else
+                        {
+                            <input disabled asp-for="@Model.Predictions[i].HalftimeScore"/>
+                        }
+                        <span class="text-danger" asp-validation-for="@Model.Predictions[i].HalftimeScore"></span>
+                    </td>
+                    <td>
+                        @if (Model.Predictions[i].Editable)
+                        {
+                            <input asp-for="@Model.Predictions[i].FulltimeScore"/>
+                        }
+                        else
+                        {
+                            <input disabled asp-for="@Model.Predictions[i].FulltimeScore"/>
+                        }
+                        <span class="text-danger" asp-validation-for="@Model.Predictions[i].FulltimeScore"></span>
+                    </td>
+                    <td>
+                        <input type="hidden" asp-for="@Model.Predictions[i].Id"/>
+                    </td>
+                    <td>
+                        <input type="hidden" asp-for="@Model.Predictions[i].GameId"/>
+                    </td>
+                </tr>
+            }
+        </table>
+        <input type="submit" name="save" value="Save"/>
+    </form>
+</div>

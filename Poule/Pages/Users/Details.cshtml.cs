@@ -9,7 +9,7 @@ namespace Poule.Pages.Users
     {
         private IUserData _UserData;
 
-        public UserEditModel User { get; set; }
+        public UserEditModel MyUser { get; set; }
 
         public DetailsModel(IUserData UserData)
         {
@@ -18,8 +18,8 @@ namespace Poule.Pages.Users
 
         public IActionResult OnGet(int id)
         {
-            User = _UserData.ToEditModel(_UserData.Get(id));
-            if (User == null)
+            MyUser = _UserData.ToEditModel(_UserData.Get(id));
+            if (MyUser == null)
             {
                 return NotFound();
             }

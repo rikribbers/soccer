@@ -16,7 +16,7 @@ namespace Poule.Pages.Users
         [BindProperty]
         public int Id { get; set; }
         [BindProperty]
-        public UserEditModel User { get; set; }
+        public UserEditModel MyUser { get; set; }
 
         public EditModel(IUserData UserData)
         {
@@ -25,7 +25,7 @@ namespace Poule.Pages.Users
         
         public IActionResult OnGet(int id)
         {
-           User = _UserData.ToEditModel(_UserData.Get(id));
+            MyUser = _UserData.ToEditModel(_UserData.Get(id));
             Id = id;
             if (User == null)
             {
@@ -39,7 +39,7 @@ namespace Poule.Pages.Users
         {
             if (ModelState.IsValid)
             {
-                _UserData.Update(_UserData.ToEntity(User,Id));
+                _UserData.Update(_UserData.ToEntity(MyUser, Id));
                 return RedirectToAction("Details", "Users", new {id = Id});
             }
             return Page();

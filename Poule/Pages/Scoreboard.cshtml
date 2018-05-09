@@ -3,23 +3,24 @@
 @{
     ViewBag.Title = "Scorebord";
 }
-
-<table>
-    <thead>
-    <tr>
-        <th>Volgorde</th>
-        <th>Datum</th>
-        <th>Thuisteam</th>
-        <th>Uitteam</th>
-        <th>Ruststand</th>
-        <th>Eindstand</th>
-        @foreach (var u in Model.Users)
-        {
-            <th colspan="3">@u.Name</th>
+<p></p>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Volgorde</th>
+                <th>Datum</th>
+                <th>Thuisteam</th>
+                <th>Uitteam</th>
+                <th>Ruststand</th>
+                <th>Eindstand</th>
+                @foreach (var u in Model.Users)
+            {
+                <th colspan="3">@u.Name</th>
         }
-    </tr>
-    </thead>
-    @foreach (var game in Model.Games)
+            </tr>
+        </thead>
+        @foreach (var game in Model.Games)
     {
         <tr>
             <td>@game.Order</td>
@@ -29,13 +30,23 @@
             <td>@game.HalftimeScore</td>
             <td>@game.FulltimeScore</td>
             @foreach (var u in Model.Users)
-            {
-                var p = Model.GetScoreForUser(game, u.Id);
+        {
+            var p = Model.GetScoreForUser(game, u.Id);
 
-                <td>@p.HalftimeScore</td>
-                <td>@p.FulltimeScore</td>
-                <td>@p.Points</td>
-            }
-        </tr>
+            <td>@p.HalftimeScore</td>
+            <td>@p.FulltimeScore</td>
+            <td>@p.Points</td>
     }
-</table>
+        </tr>
+}
+        <tfoot>
+        <th colspan="5"></th>
+        <th >Totaal</th>
+        @foreach (var u in Model.Users)
+    {
+        <th colspan="2"></th>
+        <th>@Model.TotalScores[u.Id]</th>
+}
+        </tfoot>
+    </table>
+</div>

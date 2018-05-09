@@ -3,7 +3,11 @@
 @{
     ViewBag.Title = "Details Voorspelling";
 }
-
+<div>
+    <label asp-for="Prediction.Date"></label>
+    <input disabled="true" asp-for="Prediction.Date" />
+    <span asp-validation-for="Prediction.Date"></span>
+</div>
 <div>
     <label asp-for="Prediction.HomeTeam"></label>
     <input  disabled="true" asp-for="Prediction.HomeTeam" />

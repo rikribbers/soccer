@@ -3,25 +3,28 @@
 @{
     ViewBag.Title = "Gebruikers";
 }
-<table>
-    <thead>
-    <tr>
-        <th>Id</th>
-        <th>Volgorde</th>
-        <th>Naam</th>
-        <th>Emailadres</th>
-    </tr>
-    </thead>
-    @foreach (var item in Model.Users)
-    {
-    <tr>
-        <td>@item.Id</td>
-        <td>@item.Order</td>
-        <td>@item.Name</td>
-        <td>@item.EmailAddress</td>
-        <td><a asp-page="Details" asp-route-id="@item.Id">Details</a></td>
-        <td><a asp-page="Edit" asp-route-id="@item.Id">Edit</a></td>
-    </tr>
-    }
-</table>
-<a asp-page="Create">Voeg een gebruiker toe</a>
+<p></p>
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Volgorde</th>
+            <th>Naam</th>
+            <th>Emailadres</th>
+        </tr>
+        </thead>
+        @foreach (var item in Model.Users)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Order</td>
+                <td>@item.Name</td>
+                <td>@item.EmailAddress</td>
+                <td><a asp-page="Details" asp-route-id="@item.Id">Details</a></td>
+                <td><a asp-page="Edit" asp-route-id="@item.Id">Edit</a></td>
+            </tr>
+        }
+    </table>
+    <a asp-page="Create">Voeg een gebruiker toe</a>
+</div>

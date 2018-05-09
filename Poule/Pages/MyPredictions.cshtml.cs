@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
@@ -29,11 +30,17 @@ namespace Poule.Pages
 
         public IActionResult OnGet(int id)
         {
+            FillController(id);
+            return Page();
+        }
+
+        private void FillController(int id)
+        {
             Predictions = new List<MyPredictionEditModel>();
 
             var games = _gameData.GetAll();
             MyUser = _userData.Get(id);
-
+            var currentTime = DateTime.Now;
             foreach (var game in games)
             {
                 var prediction = _predictionData.GetForUser(MyUser.Id).FirstOrDefault(p => p.Game.Id == game.Id);
@@ -50,10 +57,9 @@ namespace Poule.Pages
                 else
                 {
                     prediction.User = MyUser;
-                    Predictions.Add(_predictionData.ToMyPredictionEditModel(prediction));
+                    Predictions.Add(_predictionData.ToMyPredictionEditModel(prediction,currentTime));
                 }
             }
-            return Page();
         }
 
         [ValidateAntiForgeryToken]
@@ -72,9 +78,10 @@ namespace Poule.Pages
                     else
                         _predictionData.Update(p);
                 }
-
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) 
                 return RedirectToPage("MyPredictions", new {id = MyUser.Id});
+
+            FillController(MyUser.Id);
             return Page();
         }
     }

@@ -16,6 +16,7 @@ namespace Poule.Pages
         public IEnumerable<Game> Games { get; set; }
 
         public IEnumerable<User> Users { get; set; }
+        public Dictionary<int,int> TotalScores { get; set; }
 
         public ScoreboardModel(IPredictionData predictionData,IUserData userData)
         {
@@ -26,8 +27,19 @@ namespace Poule.Pages
         public IActionResult OnGet()
         {
             Predictions = _predictionData.GetAll();
-            Games = Predictions.Select(p => p.Game).OrderBy(g => g.Order);
+            Games = Predictions.Select(p => p.Game).Distinct().OrderBy(g => g.Order);
             Users = _userData.GetAll();
+            TotalScores = new Dictionary<int, int>();
+            foreach (var user in Users)
+            {
+                var total = 0;
+                foreach (var p in Predictions.Where(p => p.User.Id == user.Id))
+                {
+                    total += CalculateScore(p.Game.HalftimeScore, p.Game.FulltimeScore, p.HalftimeScore,
+                        p.FulltimeScore);
+                }
+                TotalScores.Add(user.Id,total);
+            }          
             return Page();
         }
 

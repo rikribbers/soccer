@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Poule.Entities;
@@ -44,6 +45,7 @@ namespace Poule.Services
         {
             return new PredictionEditModel
             {
+                Date = prediction.Game.Date,
                 HomeTeam = prediction.Game.HomeTeam,
                 AwayTeam = prediction.Game.AwayTeam,
                 Username = prediction.User.Name,
@@ -67,17 +69,19 @@ namespace Poule.Services
             return _context.Predictions.Where(p => p.User.Id == id);
         }
 
-
-        public MyPredictionEditModel ToMyPredictionEditModel(Prediction prediction)
-        {
+        public MyPredictionEditModel ToMyPredictionEditModel(Prediction prediction, DateTime currentTime)
+        {   
             return new MyPredictionEditModel
             {
                 Id = prediction.Id,
                 GameId = prediction.Game.Id,
+                Date = prediction.Game.Date,
                 HomeTeam = prediction.Game.HomeTeam,
                 AwayTeam = prediction.Game.AwayTeam,
                 HalftimeScore = prediction.HalftimeScore,
-                FulltimeScore = prediction.FulltimeScore
+                FulltimeScore = prediction.FulltimeScore,
+                // only editable until 1h before start of game;
+                Editable = currentTime.Add(TimeSpan.FromHours(1)).CompareTo(prediction.Game.Date) <=0
             };
         }
 
