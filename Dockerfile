@@ -2,11 +2,11 @@ FROM microsoft/aspnetcore-build:2.0 AS build-env
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
-COPY src/Poule/*.csproj ./
+COPY Poule/*.csproj ./
 RUN dotnet restore
 
 # Copy everything else and build
-COPY src/Poule ./
+COPY Poule ./
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
