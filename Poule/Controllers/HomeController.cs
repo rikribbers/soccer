@@ -6,7 +6,7 @@ namespace Poule.Controllers
     {
         public IActionResult Index()
         {
-            return Content("Hello From HomeController");
+            return RedirectToPage("/Scoreboard");
         }
     }
 }
