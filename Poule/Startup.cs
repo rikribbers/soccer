@@ -78,8 +78,16 @@ namespace Poule
                 PouleGameManagersAuthorizationHandler>();
 
             // Mail
-            services.AddSingleton<IEmailConfiguration>(Configuration.GetSection("EmailConfiguration")
-                .Get<EmailConfiguration>());
+            var smtpConfig = Configuration.GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+            var smtpPassword = Configuration["SMTPUserPW"];
+
+            if (smtpPassword == null)
+            {
+                smtpPassword = System.Environment.GetEnvironmentVariable("POULE_SMTP_PASSWORD");
+            }
+            smtpConfig.SmtpPassword = smtpPassword;
+            services.AddSingleton<IEmailConfiguration>(smtpConfig);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

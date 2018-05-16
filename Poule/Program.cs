@@ -28,7 +28,10 @@ namespace Poule
                 // dotnet user-secrets set SeedUserPW <pw>
 
                 var testUserPw = config["SeedUserPW"];
-
+                if (testUserPw == null)
+                {
+                    testUserPw = Environment.GetEnvironmentVariable("POULE_SEED_USER_PASSWORD");
+                }
                 try
                 {
                     SeedData.Initialize(services, testUserPw).Wait();

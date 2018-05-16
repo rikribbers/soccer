@@ -46,9 +46,7 @@ namespace Poule.Services
                 //Remove any OAuth functionality as we won't be using it. 
                 emailClient.AuthenticationMechanisms.Remove("XOAUTH2");
 
-                var smtpPassword = _config["SMTPUserPW"];
-
-                emailClient.Authenticate(_emailConfiguration.SmtpUsername, smtpPassword);
+                emailClient.Authenticate(_emailConfiguration.SmtpUsername, _emailConfiguration.SmtpPassword);
 
                 emailClient.Send(message);
 
