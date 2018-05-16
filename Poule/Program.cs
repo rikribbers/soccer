@@ -1,44 +1,53 @@
-﻿using System;
+﻿using Poule.Data;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Poule.Entities;
-using Poule.Services;
+using System;
 
 namespace Poule
 {
+    #region snippet
     public class Program
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
-        }
-
-        public static IWebHost BuildWebHost(string[] args)
-        {
-            var host = WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
-
+            var host = BuildWebHost(args);
 
             using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
-                var context = services.GetRequiredService<PouleDbContext>();
+                var context = services.GetRequiredService<ApplicationDbContext>();
+                context.Database.Migrate();
+
+                // requires using Microsoft.Extensions.Configuration;
+                var config = host.Services.GetRequiredService<IConfiguration>();
+                // Set password with the Secret Manager tool.
+                // dotnet user-secrets set SeedUserPW <pw>
+
+                var testUserPw = config["SeedUserPW"];
+
                 try
                 {
-                    context.Database.Migrate();
+                    SeedData.Initialize(services, testUserPw).Wait();
                 }
                 catch (Exception ex)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "An error occurred migrating the database.");
+                    logger.LogError(ex, "An error occurred while seeding the database.");
+                    throw ex;
                 }
             }
 
-            return host;
+            host.Run();
         }
+
+        public static IWebHost BuildWebHost(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>()
+                .Build();
     }
+    #endregion
 }

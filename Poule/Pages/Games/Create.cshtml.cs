@@ -1,10 +1,12 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Authorization;
 using Poule.Services;
 using Poule.ViewModel;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Poule.Pages.Games
 {
+    [Authorize(Roles = "PouleAdministrators")]
     public class CreateModel : PageModel
     {
         private IGameData _gameData;

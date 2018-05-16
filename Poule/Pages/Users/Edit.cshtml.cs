@@ -1,15 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Poule.Entities;
 using Poule.Services;
 using Poule.ViewModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Poule.Pages.Users
 {
+    [Authorize(Roles = "PouleAdministrators")]
     public class EditModel : PageModel
     {
         private IUserData _UserData;

@@ -1,11 +1,13 @@
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
+using Poule.Models;
+using Poule.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Poule.Entities;
-using Poule.Services;
 
 namespace Poule.Pages.Games
 {
+    [Authorize(Roles = "PouleAdministrators")]
     public class IndexModel : PageModel
     {
         private readonly IGameData _gameData;

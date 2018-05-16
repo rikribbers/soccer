@@ -1,6 +1,7 @@
-﻿@page
-@model ScoreboardModel
+﻿@page   
+@model Poule.Pages.ScoreboardModel
 @{
+    Layout = "_LayoutPoule";
     ViewBag.Title = "Scorebord";
 }
 <p></p>
@@ -15,38 +16,38 @@
                 <th>Ruststand</th>
                 <th>Eindstand</th>
                 @foreach (var u in Model.Users)
-            {
-                <th colspan="3">@u.Name</th>
-        }
+                {
+                    <th colspan="3">@u.Name</th>
+                }
             </tr>
         </thead>
         @foreach (var game in Model.Games)
-    {
-        <tr>
-            <td>@game.Order</td>
-            <td>@game.Date</td>
-            <td>@game.HomeTeam</td>
-            <td>@game.AwayTeam</td>
-            <td>@game.HalftimeScore</td>
-            <td>@game.FulltimeScore</td>
-            @foreach (var u in Model.Users)
         {
-            var p = Model.GetScoreForUser(game, u.Id);
+            <tr>
+                <td>@game.Order</td>
+                <td>@game.Date</td>
+                <td>@game.HomeTeam</td>
+                <td>@game.AwayTeam</td>
+                <td>@game.HalftimeScore</td>
+                <td>@game.FulltimeScore</td>
+                @foreach (var u in Model.Users)
+                {
+                    var p = Model.GetScoreForUser(game, u.Id);
 
-            <td>@p.HalftimeScore</td>
-            <td>@p.FulltimeScore</td>
-            <td>@p.Points</td>
-    }
-        </tr>
-}
+                    <td>@p.HalftimeScore</td>
+                    <td>@p.FulltimeScore</td>
+                    <td>@p.Points</td>
+                }
+            </tr>
+        }
         <tfoot>
         <th colspan="5"></th>
-        <th >Totaal</th>
+        <th>Totaal</th>
         @foreach (var u in Model.Users)
-    {
-        <th colspan="2"></th>
-        <th>@Model.TotalScores[u.Id]</th>
-}
+        {
+            <th colspan="2"></th>
+            <th>@Model.TotalScores[u.Id]</th>
+        }
         </tfoot>
     </table>
 </div>

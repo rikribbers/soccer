@@ -1,15 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Poule.Entities;
+using Poule.Data;
+using Poule.Models;
 using Poule.Services;
 using Poule.ViewModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Poule.Pages
 {
-    public class MyPredictionsModel : PageModel
+    public class MyPredictionsModel : BasePageModel
     {
         private readonly IPredictionData _predictionData;
         private readonly IGameData _gameData;
@@ -21,15 +24,20 @@ namespace Poule.Pages
         [BindProperty]
         public User MyUser { get; set; }
 
-        public MyPredictionsModel(IPredictionData predictionData, IGameData gameData, IUserData userData)
+        public MyPredictionsModel(IPredictionData predictionData, IGameData gameData, IUserData userData, ApplicationDbContext context,
+            IAuthorizationService authorizationService,
+            UserManager<ApplicationUser> userManager)
+            : base(context, authorizationService, userManager)
         {
             _predictionData = predictionData;
             _gameData = gameData;
             _userData = userData;
         }
 
-        public IActionResult OnGet(int id)
+        public IActionResult OnGet()
         {
+            var email = User.Identity.Name;
+            var id = _userData.Get(email).Id;
             FillController(id);
             return Page();
         }
@@ -47,12 +55,7 @@ namespace Poule.Pages
 
                 if (prediction == null)
                 {
-                    Predictions.Add(new MyPredictionEditModel
-                    {
-                        GameId = game.Id,
-                        HomeTeam = game.HomeTeam,
-                        AwayTeam = game.AwayTeam
-                    });
+                    Predictions.Add(_predictionData.ToMyPredictionEditModel(game, currentTime));
                 }
                 else
                 {

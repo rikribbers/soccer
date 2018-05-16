@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Poule.Entities;
+using Poule.Models;
 using Poule.ViewModel;
 
 namespace Poule.Services

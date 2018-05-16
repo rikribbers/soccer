@@ -1,77 +1,108 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Poule.Authorization;
+using Poule.Data;
+using Poule.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Poule.Entities;
-using Poule.Services;
 
 namespace Poule
 {
     public class Startup
     {
-        private readonly IConfiguration _configuration;
-        private IHostingEnvironment _env;
-
-        public Startup(IConfiguration configuraton, IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
-            _configuration = configuraton;
-            _env = env;
+            Configuration = configuration;
+            Environment = env;
         }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        public IConfiguration Configuration { get; }
+        private IHostingEnvironment Environment { get; }
+
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
-            services.AddSingleton<IGreeter, Greeter>();
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("Poule")));
 
-            services.AddDbContext<PouleDbContext>(options =>
-                options.UseNpgsql(_configuration.GetConnectionString("Poule")));
+            services.AddIdentity<ApplicationUser, IdentityRole>(config =>
+                {
+                    config.SignIn.RequireConfirmedEmail = true;
+                })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddScoped<IUserData, SqlUserData>();
             services.AddScoped<IGameData, SqlGameData>();
             services.AddScoped<IPredictionData, SqlPredictionData>();
+
+            var skipHTTPS = Configuration.GetValue<bool>("LocalTest:skipHTTPS");
+            // requires using Microsoft.AspNetCore.Mvc;
+            services.Configure<MvcOptions>(options =>
+            {
+                // Set LocalTest:skipHTTPS to true to skip SSL requrement in 
+                // debug mode. This is useful when not using Visual Studio.
+                if (Environment.IsDevelopment() && !skipHTTPS)
+                {
+                    options.Filters.Add(new RequireHttpsAttribute());
+                }
+            });
+
+            services.AddMvc();
+
+            services.AddSingleton<IEmailSender, EmailSender>();
+
+            services.AddMvc(config =>
+            {
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+                config.Filters.Add(new AuthorizeFilter(policy));
+            });
+
+
+            // Authorization handlers.
+            // LATER ADD MORE OF THEM
+            services.AddSingleton<IAuthorizationHandler,
+                PouleAdminPredictionAuthorizationHandler>();
+        
+
+            services.AddSingleton<IAuthorizationHandler,
+                PouleGameManagersAuthorizationHandler>();
+
+            // Mail
+            services.AddSingleton<IEmailConfiguration>(Configuration.GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>());
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app,
-            IConfiguration configuration,
-            IGreeter greeter,
-            ILogger<Startup> logger)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (_env.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseBrowserLink();
+                app.UseDatabaseErrorPage();
             }
-
-            if (_env.IsProduction())
+            else
             {
-                app.UseForwardedHeaders(new ForwardedHeadersOptions
-                {
-                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-                });
-
+                app.UseExceptionHandler("/Error");
             }
+
             app.UseStaticFiles();
-            app.UseMvc(ConfigureRoutes);
-            
-            app.Run(async (context) =>
-            {
-                var greeting = greeter.GetMessageOfTheDay();
-                context.Response.ContentType = "text/plain";
-                await context.Response.WriteAsync($"{greeting} ({_env.EnvironmentName})");
-            });
-        }
 
+            app.UseAuthentication();
+
+            app.UseMvc(ConfigureRoutes);
+
+        }
+    
         private void ConfigureRoutes(IRouteBuilder routeBuilder)
         {
             routeBuilder.MapRoute("Default", "{controller=Home}/{action=Index}/{id?}");

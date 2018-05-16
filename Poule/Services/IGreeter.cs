@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace Poule
+namespace Poule.Services
 {
     public interface IGreeter
     {

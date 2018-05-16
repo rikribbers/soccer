@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Poule.Entities;
+using Poule.Data;
+using Poule.Models;
 using Poule.ViewModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace Poule.Services
 {
     public class SqlGameData : IGameData
     {
-        private readonly PouleDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public SqlGameData(PouleDbContext context)
+        public SqlGameData(ApplicationDbContext context)
         {
             _context = context;
         }

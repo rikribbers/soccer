@@ -1,11 +1,13 @@
 using System.Collections.Generic;
+using Poule.Models;
+using Poule.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Poule.Entities;
-using Poule.Services;
 
 namespace Poule.Pages.Users
 {
+    [Authorize(Roles = "PouleAdministrators")]
     public class IndexModel : PageModel
     {
         private readonly IUserData _UserData;

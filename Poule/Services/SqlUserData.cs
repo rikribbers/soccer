@@ -1,35 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Poule.Data;
+using Poule.Models;
 using Microsoft.EntityFrameworkCore;
-using Poule.Entities;
 using Poule.ViewModel;
 
 namespace Poule.Services
 {
     public class SqlUserData : IUserData
     {
-        private PouleDbContext _context;
+        private ApplicationDbContext _context;
 
-        public SqlUserData(PouleDbContext context)
+        public SqlUserData(ApplicationDbContext context)
         {
             _context = context;
         }
 
         public IEnumerable<User> GetAll()
         {
-            return _context.Users.OrderBy(u => u.Order);
+            return _context.MyUsers.OrderBy(u => u.Order);
         }
 
         public User Get(int id)
         {
-            return _context.Users.FirstOrDefault(u => u.Id == id);
+            return _context.MyUsers.FirstOrDefault(u => u.Id == id);
+        }
+
+        public User Get(string email)
+        {
+            return _context.MyUsers.FirstOrDefault(u => u.EmailAddress== email);
         }
 
         public User Add(User newUser)
         {
-            _context.Users.Add(newUser);
+            _context.MyUsers.Add(newUser);
             _context.SaveChanges();
             return newUser;
         }

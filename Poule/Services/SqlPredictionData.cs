@@ -1,24 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Poule.Entities;
+using Poule.Data;
+using Poule.Models;
 using Poule.ViewModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace Poule.Services
 {
     public class SqlPredictionData : IPredictionData
     {
-        private readonly PouleDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public SqlPredictionData(PouleDbContext context)
+        public SqlPredictionData(ApplicationDbContext context)
         {
             _context = context;
         }
 
         public IEnumerable<Prediction> GetAll()
         {
-            return _context.Predictions.Include(p=> p.Game).Include(p => p.User).OrderBy(p => p.Game.Order).ThenBy(p => p.User.Order);
+            return _context.Predictions.Include(p => p.Game).Include(p => p.User).OrderBy(p => p.Game.Order)
+                .ThenBy(p => p.User.Order);
         }
 
         public Prediction Get(int id)
@@ -66,11 +68,22 @@ namespace Poule.Services
 
         public IEnumerable<Prediction> GetForUser(int id)
         {
-            return _context.Predictions.Where(p => p.User.Id == id);
+            IEnumerable<Prediction> result = _context.Predictions.Where(p => p.User.Id == id);
+            if (result == null)
+            {
+                return new List<Prediction>();
+            }
+            return result;
+        }
+
+        public void Remove(Prediction prediction)
+        {
+            _context.Remove(prediction);
+            _context.SaveChanges();
         }
 
         public MyPredictionEditModel ToMyPredictionEditModel(Prediction prediction, DateTime currentTime)
-        {   
+        {
             return new MyPredictionEditModel
             {
                 Id = prediction.Id,
@@ -80,8 +93,19 @@ namespace Poule.Services
                 AwayTeam = prediction.Game.AwayTeam,
                 HalftimeScore = prediction.HalftimeScore,
                 FulltimeScore = prediction.FulltimeScore,
-                // only editable until 1h before start of game;
-                Editable = currentTime.Add(TimeSpan.FromHours(1)).CompareTo(prediction.Game.Date) <=0
+                Editable = isEditable(currentTime, prediction.Game)
+            };
+        }
+
+        public MyPredictionEditModel ToMyPredictionEditModel(Game game, DateTime currentTime)
+        {
+            return new MyPredictionEditModel
+            {
+                Date = game.Date,
+                GameId = game.Id,
+                HomeTeam = game.HomeTeam,
+                AwayTeam = game.AwayTeam,
+                Editable = isEditable(currentTime, game)
             };
         }
 
@@ -93,6 +117,12 @@ namespace Poule.Services
             entity.FulltimeScore = prediction.FulltimeScore;
             entity.HalftimeScore = prediction.HalftimeScore;
             return entity;
+        }
+
+        private bool isEditable(DateTime time, Game game)
+        {
+            // only editable until 1h before start of game;
+            return time.Add(TimeSpan.FromHours(1)).CompareTo(game.Date) <= 0;
         }
     }
 }

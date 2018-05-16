@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Poule.Entities;
+using Poule.Models;
 using Poule.ViewModel;
 
 namespace Poule.Services
@@ -8,6 +8,7 @@ namespace Poule.Services
     {
         IEnumerable<User> GetAll();
         User Get(int id);
+        User Get(string email);
         User Add(User newUser);
         User Update(User user);
         User ToEntity(UserEditModel user, int id = 0);

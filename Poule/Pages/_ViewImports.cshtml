@@ -1,6 +1,10 @@
-﻿@using Poule.Entities;
+@using Microsoft.AspNetCore.Identity
+@using Poule
+@using Poule.Data
 @using Poule.ViewModel;
-@using Poule.Pages;
-@using Poule.Services;
-
+@namespace Poule.Pages
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using Poule.Authorization;
+@using Microsoft.AspNetCore.Authorization
+@using Poule.Models
+@inject IAuthorizationService AuthorizationService

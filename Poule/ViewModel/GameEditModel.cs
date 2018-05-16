@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Poule.Entities;
+using Poule.Models;
 
 namespace Poule.ViewModel
 {
