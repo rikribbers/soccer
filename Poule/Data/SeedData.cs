@@ -1,11 +1,9 @@
-﻿using Poule.Authorization;
-using Poule.Models;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
+using Poule.Authorization;
 
 // dotnet aspnet-codegenerator razorpage -m Contact -dc ApplicationDbContext -outDir Pages\Contacts --referenceScriptLibraries
 namespace Poule.Data
@@ -24,20 +22,20 @@ namespace Poule.Data
 
                 var adminID = await EnsureUser(serviceProvider, testUserPw, "rik.ribbers@gmail.com");
                 await EnsureRole(serviceProvider, adminID, Constants.PouleAdministratorsRole);
-                
+
                 SeedDB(context, adminID);
             }
         }
-      
+
         private static async Task<string> EnsureUser(IServiceProvider serviceProvider,
-                                                    string testUserPw, string UserName)
+            string testUserPw, string UserName)
         {
             var userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
 
             var user = await userManager.FindByNameAsync(UserName);
             if (user == null)
             {
-                user = new ApplicationUser { UserName = UserName };
+                user = new ApplicationUser {UserName = UserName};
                 user.EmailConfirmed = true;
                 await userManager.CreateAsync(user, testUserPw);
             }
@@ -46,15 +44,13 @@ namespace Poule.Data
         }
 
         private static async Task<IdentityResult> EnsureRole(IServiceProvider serviceProvider,
-                                                                      string uid, string role)
+            string uid, string role)
         {
             IdentityResult IR = null;
             var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
 
             if (!await roleManager.RoleExistsAsync(role))
-            {
                 IR = await roleManager.CreateAsync(new IdentityRole(role));
-            }
 
             var userManager = serviceProvider.GetService<UserManager<ApplicationUser>>();
 
@@ -64,6 +60,7 @@ namespace Poule.Data
 
             return IR;
         }
+
         public static void SeedDB(ApplicationDbContext context, string adminID)
         {
             context.SaveChanges();

@@ -3,6 +3,7 @@
 namespace Poule.Models
 {
     #region snippet1
+
     public class Contact
     {
         public int ContactId { get; set; }
@@ -15,6 +16,7 @@ namespace Poule.Models
         public string City { get; set; }
         public string State { get; set; }
         public string Zip { get; set; }
+
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
@@ -27,5 +29,6 @@ namespace Poule.Models
         Approved,
         Rejected
     }
+
     #endregion
 }

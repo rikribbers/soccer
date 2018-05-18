@@ -24,6 +24,6 @@ services:
       dockerfile: Dockerfile
     environment:
       POULE_SEED_USER_PASSWORD: ${POULE_SEED_USER_PASSWORD}
-      POULE_SMTP_USER_PASSWORD: ${POULE_SMTP_USER_PASSWORD}
+      POULE_SMTP_PASSWORD: ${POULE_SMTP_PASSWORD}
 volumes:
   pgdata_poule:

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Poule.Data;
 using Poule.Models;
 using Poule.ViewModel;
-using Microsoft.EntityFrameworkCore;
 
 namespace Poule.Services
 {
@@ -53,11 +53,11 @@ namespace Poule.Services
                 FulltimeScore = game.FulltimeScore
             };
         }
+
         public Game ToEntity(GameEditModel game, int id)
         {
             var g = new Game
             {
-
                 Order = game.Order,
                 Date = game.Date,
                 Round = game.Round,
@@ -67,9 +67,7 @@ namespace Poule.Services
                 FulltimeScore = game.FulltimeScore
             };
             if (id > 0)
-            {
                 g.Id = id;
-            }
             return g;
         }
     }

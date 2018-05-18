@@ -13,6 +13,5 @@ namespace Poule.Services
         User Update(User user);
         User ToEntity(UserEditModel user, int id = 0);
         UserEditModel ToEditModel(User game);
- 
     }
 }

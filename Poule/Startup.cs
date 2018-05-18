@@ -35,7 +35,14 @@ namespace Poule
             services.AddIdentity<ApplicationUser, IdentityRole>(config =>
                 {
                     config.SignIn.RequireConfirmedEmail = true;
-                })
+                    // Password settings
+                    config.Password.RequireDigit = false;
+                    config.Password.RequiredLength = 8;
+                    config.Password.RequireNonAlphanumeric = false;
+                    config.Password.RequireUppercase = false;
+                    config.Password.RequireLowercase = false;
+                    config.Password.RequiredUniqueChars = 6;
+                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 

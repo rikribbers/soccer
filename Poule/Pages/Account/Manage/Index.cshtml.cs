@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Poule.Data;
+using Poule.Extensions;
 using Poule.Services;
 
 namespace Poule.Pages.Account.Manage

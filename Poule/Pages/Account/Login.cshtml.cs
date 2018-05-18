@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Poule.Data;
 using Microsoft.AspNetCore.Authorization;
+using Poule.Extensions;
 
 namespace Poule.Pages.Account
 {

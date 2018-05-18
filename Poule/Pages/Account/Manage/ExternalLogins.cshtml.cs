@@ -36,9 +36,7 @@ namespace Poule.Pages.Account.Manage
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
-            {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
 
             CurrentLogins = await _userManager.GetLoginsAsync(user);
             OtherLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync())
@@ -52,17 +50,14 @@ namespace Poule.Pages.Account.Manage
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
-            {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
 
             var result = await _userManager.RemoveLoginAsync(user, loginProvider, providerKey);
             if (!result.Succeeded)
-            {
-                throw new ApplicationException($"Unexpected error occurred removing external login for user with ID '{user.Id}'.");
-            }
+                throw new ApplicationException(
+                    $"Unexpected error occurred removing external login for user with ID '{user.Id}'.");
 
-            await _signInManager.SignInAsync(user, isPersistent: false);
+            await _signInManager.SignInAsync(user, false);
             StatusMessage = "The external login was removed.";
             return RedirectToPage();
         }
@@ -73,8 +68,10 @@ namespace Poule.Pages.Account.Manage
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             // Request a redirect to the external login provider to link a login for the current user
-            var redirectUrl = Url.Page("./ExternalLogins", pageHandler: "LinkLoginCallback");
-            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, _userManager.GetUserId(User));
+            var redirectUrl = Url.Page("./ExternalLogins", "LinkLoginCallback");
+            var properties =
+                _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl,
+                    _userManager.GetUserId(User));
             return new ChallengeResult(provider, properties);
         }
 
@@ -82,21 +79,17 @@ namespace Poule.Pages.Account.Manage
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
-            {
                 throw new ApplicationException($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
 
             var info = await _signInManager.GetExternalLoginInfoAsync(await _userManager.GetUserIdAsync(user));
             if (info == null)
-            {
-                throw new ApplicationException($"Unexpected error occurred loading external login info for user with ID '{user.Id}'.");
-            }
+                throw new ApplicationException(
+                    $"Unexpected error occurred loading external login info for user with ID '{user.Id}'.");
 
             var result = await _userManager.AddLoginAsync(user, info);
             if (!result.Succeeded)
-            {
-                throw new ApplicationException($"Unexpected error occurred adding external login for user with ID '{user.Id}'.");
-            }
+                throw new ApplicationException(
+                    $"Unexpected error occurred adding external login for user with ID '{user.Id}'.");
 
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);

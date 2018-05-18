@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Poule.Data;
 using Poule.Models;
-using Microsoft.EntityFrameworkCore;
 using Poule.ViewModel;
 
 namespace Poule.Services
 {
     public class SqlUserData : IUserData
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public SqlUserData(ApplicationDbContext context)
         {
@@ -28,7 +28,7 @@ namespace Poule.Services
 
         public User Get(string email)
         {
-            return _context.MyUsers.FirstOrDefault(u => u.EmailAddress== email);
+            return _context.MyUsers.FirstOrDefault(u => u.EmailAddress == email);
         }
 
         public User Add(User newUser)
@@ -44,7 +44,7 @@ namespace Poule.Services
             {
                 Order = user.Order,
                 Name = user.Name,
-                EmailAddress = user.EmailAddress,
+                EmailAddress = user.EmailAddress
             };
         }
 
@@ -55,21 +55,18 @@ namespace Poule.Services
             return user;
         }
 
-    public User ToEntity(UserEditModel user, int id)
-    {
-    var g = new User
+        public User ToEntity(UserEditModel user, int id)
         {
-            Order = user.Order,
-            Name = user.Name,
-            EmailAddress = user.EmailAddress,
-        };
-        if (id > 0)
-    {
-        g.Id = id;
-    }
+            var g = new User
+            {
+                Order = user.Order,
+                Name = user.Name,
+                EmailAddress = user.EmailAddress
+            };
+            if (id > 0)
+                g.Id = id;
 
-    return g;
+            return g;
+        }
     }
-}
-
 }

@@ -1,4 +1,5 @@
 
+
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
@@ -16,17 +17,18 @@ namespace Poule.Services
         private readonly IEmailConfiguration _emailConfiguration;
         private readonly IConfiguration _config;
 
-        public EmailSender(IEmailConfiguration emailConfiguration,IConfiguration config)
+        public EmailSender(IEmailConfiguration emailConfiguration, IConfiguration config)
         {
             _emailConfiguration = emailConfiguration;
             _config = config;
         }
+
         public Task SendEmailAsync(string email, string subject, string content)
         {
             var message = new MimeMessage();
-            message.To.Add(new MailboxAddress(email,email));
-            message.From.Add(new MailboxAddress("D� Voetbalpoule","voetbalpoule@rikribbers.nl"));
-            message.Cc.Add(new MailboxAddress("D� Voetbalpoule","voetbalpoule@rikribbers.nl"));
+            message.To.Add(new MailboxAddress(email, email));
+            message.From.Add(new MailboxAddress("De Voetbalpoule", "voetbalpoule@rikribbers.nl"));
+            message.Cc.Add(new MailboxAddress("De Voetbalpoule", "voetbalpoule@rikribbers.nl"));
 
             message.Subject = subject;
             //We will say we are sending HTML. But there are options for plaintext etc. 

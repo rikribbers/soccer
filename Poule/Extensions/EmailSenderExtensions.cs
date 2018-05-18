@@ -1,24 +1,21 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Poule.Services;
 
-namespace Poule.Services
+namespace Poule.Extensions
 {
     public static class EmailSenderExtensions
     {
         public static Task SendEmailConfirmationAsync(this IEmailSender emailSender, string email, string link)
         {
-            return emailSender.SendEmailAsync(email, "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(link)}'>clicking here</a>.");
+            return emailSender.SendEmailAsync(email, "Bevestig je emailadres voor De Voetbalpoule",
+                $"Bevestig je emailadres door  <a href='{HtmlEncoder.Default.Encode(link)}'>hier</a> te klikken.");
         }
 
         public static Task SendResetPasswordAsync(this IEmailSender emailSender, string email, string callbackUrl)
         {
             return emailSender.SendEmailAsync(email, "Reset Password",
-                $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                $"Reset je wachtwoord door <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>hier</a> te klikken.");
         }
     }
 }

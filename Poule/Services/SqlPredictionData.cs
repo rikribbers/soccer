@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Poule.Data;
 using Poule.Models;
 using Poule.ViewModel;
-using Microsoft.EntityFrameworkCore;
 
 namespace Poule.Services
 {
@@ -70,9 +70,7 @@ namespace Poule.Services
         {
             IEnumerable<Prediction> result = _context.Predictions.Where(p => p.User.Id == id);
             if (result == null)
-            {
                 return new List<Prediction>();
-            }
             return result;
         }
 
