@@ -1,5 +1,3 @@
-using Poule.Entities;
-
 namespace Poule.ViewModel
 {
     public class ScoreModel

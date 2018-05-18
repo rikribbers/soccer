@@ -13,8 +13,10 @@ namespace Poule.Services
         Prediction Update(Prediction prediction);
         PredictionEditModel ToPredictionEditModel(Prediction prediction);
         MyPredictionEditModel ToMyPredictionEditModel(Prediction prediction, DateTime currentTime);
+        MyPredictionEditModel ToMyPredictionEditModel(Game game, DateTime currentTime);
         Prediction ToEntity(PredictionEditModel prediction, int id = 0);
         Prediction ToEntity(MyPredictionEditModel prediction, int id = 0);
         IEnumerable<Prediction> GetForUser(int id);
+        void Remove(Prediction prediction);
     }
 }

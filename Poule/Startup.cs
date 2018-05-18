@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,12 +16,12 @@ namespace Poule
     public class Startup
     {
         private readonly IConfiguration _configuration;
-        private IHostingEnvironment _env;
+        private readonly IHostingEnvironment _environment;
 
-        public Startup(IConfiguration configuraton, IHostingEnvironment env)
+        public Startup(IConfiguration configuraton, IHostingEnvironment environment)
         {
             _configuration = configuraton;
-            _env = env;
+            _environment = environment;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -40,6 +37,16 @@ namespace Poule
             services.AddScoped<IUserData, SqlUserData>();
             services.AddScoped<IGameData, SqlGameData>();
             services.AddScoped<IPredictionData, SqlPredictionData>();
+
+            var skipHTTPS = _configuration.GetValue<bool>("LocalTest:skipHTTPS");
+
+            services.Configure<MvcOptions>(options =>
+            {
+                // Set LocalTest:skipHTTPS to true to skip SSL requrement in 
+                // debug mode. This is useful when not using Visual Studio.
+                if (_environment.IsDevelopment() && !skipHTTPS)
+                    options.Filters.Add(new RequireHttpsAttribute());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,27 +55,22 @@ namespace Poule
             IGreeter greeter,
             ILogger<Startup> logger)
         {
-            if (_env.IsDevelopment())
+            if (_environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseBrowserLink();
+                app.UseDatabaseErrorPage();
             }
 
-            if (_env.IsProduction())
-            {
-                app.UseForwardedHeaders(new ForwardedHeadersOptions
-                {
-                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-                });
-
-            }
             app.UseStaticFiles();
+
             app.UseMvc(ConfigureRoutes);
-            
-            app.Run(async (context) =>
+
+            app.Run(async context =>
             {
                 var greeting = greeter.GetMessageOfTheDay();
                 context.Response.ContentType = "text/plain";
-                await context.Response.WriteAsync($"{greeting} ({_env.EnvironmentName})");
+                await context.Response.WriteAsync($"{greeting} ({_environment.EnvironmentName})");
             });
         }
 

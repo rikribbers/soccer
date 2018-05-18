@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
+using Poule.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Poule.Entities;
-using Poule.Services;
 
 namespace Poule.Pages.Predictions
 {

@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using Poule.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Poule.Entities;
-using Poule.Services;
 
 namespace Poule.Pages.Users
 {

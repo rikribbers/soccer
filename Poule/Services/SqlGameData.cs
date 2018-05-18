@@ -52,11 +52,11 @@ namespace Poule.Services
                 FulltimeScore = game.FulltimeScore
             };
         }
+
         public Game ToEntity(GameEditModel game, int id)
         {
             var g = new Game
             {
-
                 Order = game.Order,
                 Date = game.Date,
                 Round = game.Round,
@@ -66,9 +66,7 @@ namespace Poule.Services
                 FulltimeScore = game.FulltimeScore
             };
             if (id > 0)
-            {
                 g.Id = id;
-            }
             return g;
         }
     }

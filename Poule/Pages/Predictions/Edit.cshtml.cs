@@ -7,9 +7,11 @@ namespace Poule.Pages.Predictions
 {
     public class EditModel : PageModel
     {
-        private IPredictionData _PredictionData;
+        private readonly IPredictionData _PredictionData;
+
         [BindProperty]
         public int Id { get; set; }
+
         [BindProperty]
         public PredictionEditModel Prediction { get; set; }
 
@@ -17,15 +19,13 @@ namespace Poule.Pages.Predictions
         {
             _PredictionData = PredictionData;
         }
-        
+
         public IActionResult OnGet(int id)
         {
-           Prediction = _PredictionData.ToPredictionEditModel(_PredictionData.Get(id));
+            Prediction = _PredictionData.ToPredictionEditModel(_PredictionData.Get(id));
             Id = id;
             if (Prediction == null)
-            {
                 return RedirectToAction("Index", "Home");
-            }
             return Page();
         }
 
@@ -34,7 +34,7 @@ namespace Poule.Pages.Predictions
         {
             if (ModelState.IsValid)
             {
-                _PredictionData.Update(_PredictionData.ToEntity(Prediction,Id));
+                _PredictionData.Update(_PredictionData.ToEntity(Prediction, Id));
                 return RedirectToAction("Details", "Predictions", new {id = Id});
             }
             return Page();

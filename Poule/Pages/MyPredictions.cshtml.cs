@@ -47,17 +47,12 @@ namespace Poule.Pages
 
                 if (prediction == null)
                 {
-                    Predictions.Add(new MyPredictionEditModel
-                    {
-                        GameId = game.Id,
-                        HomeTeam = game.HomeTeam,
-                        AwayTeam = game.AwayTeam
-                    });
+                    Predictions.Add(_predictionData.ToMyPredictionEditModel(game, currentTime));
                 }
                 else
                 {
                     prediction.User = MyUser;
-                    Predictions.Add(_predictionData.ToMyPredictionEditModel(prediction,currentTime));
+                    Predictions.Add(_predictionData.ToMyPredictionEditModel(prediction, currentTime));
                 }
             }
         }
@@ -78,7 +73,7 @@ namespace Poule.Pages
                     else
                         _predictionData.Update(p);
                 }
-            if (ModelState.IsValid) 
+            if (ModelState.IsValid)
                 return RedirectToPage("MyPredictions", new {id = MyUser.Id});
 
             FillController(MyUser.Id);

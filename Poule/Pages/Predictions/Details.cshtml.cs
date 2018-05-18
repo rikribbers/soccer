@@ -7,7 +7,7 @@ namespace Poule.Pages.Predictions
 {
     public class DetailsModel : PageModel
     {
-        private IPredictionData _PredictionData;
+        private readonly IPredictionData _PredictionData;
 
         public PredictionEditModel Prediction { get; set; }
 
@@ -20,9 +20,7 @@ namespace Poule.Pages.Predictions
         {
             Prediction = _PredictionData.ToPredictionEditModel(_PredictionData.Get(id));
             if (Prediction == null)
-            {
                 return NotFound();
-            }
             return Page();
         }
     }

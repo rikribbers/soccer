@@ -7,7 +7,7 @@ namespace Poule.Pages.Games
 {
     public class CreateModel : PageModel
     {
-        private IGameData _gameData;
+        private readonly IGameData _gameData;
 
         [BindProperty]
         public int Id { get; set; }
@@ -30,7 +30,7 @@ namespace Poule.Pages.Games
         {
             if (ModelState.IsValid)
             {
-                var g  = _gameData.Add(_gameData.ToEntity(Game));
+                var g = _gameData.Add(_gameData.ToEntity(Game));
                 return RedirectToAction("Details", "Games", new {id = g.Id});
             }
             return Page();

@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using Poule.Services;
+using Poule.ViewModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Poule.Entities;
-using Poule.Services;
-using Poule.ViewModel;
 
 namespace Poule.Pages
 {
@@ -12,16 +14,18 @@ namespace Poule.Pages
     {
         private readonly IPredictionData _predictionData;
         private readonly IUserData _userData;
+        private PouleDbContext _context;
         public IEnumerable<Prediction> Predictions { get; set; }
         public IEnumerable<Game> Games { get; set; }
 
         public IEnumerable<User> Users { get; set; }
         public Dictionary<int,int> TotalScores { get; set; }
 
-        public ScoreboardModel(IPredictionData predictionData,IUserData userData)
+        public ScoreboardModel(IPredictionData predictionData,IUserData userData, PouleDbContext context)
         {
             _predictionData = predictionData;
             _userData = userData;
+            _context = context;
         }
 
         public IActionResult OnGet()
