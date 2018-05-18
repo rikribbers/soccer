@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Poule.Entities;
@@ -6,6 +7,7 @@ using Poule.Services;
 
 namespace Poule.Pages.Predictions
 {
+    [Authorize]
     public class DeleteModel : PageModel
     {
         private readonly IPredictionData _predictionData;

@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -28,8 +31,13 @@ namespace Poule
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
-            services.AddSingleton<IGreeter, Greeter>();
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                })
+                .AddOpenIdConnect(options => { _configuration.Bind("AzureAd", options); })
+                .AddCookie();
 
             services.AddDbContext<PouleDbContext>(options =>
                 options.UseNpgsql(_configuration.GetConnectionString("Poule")));
@@ -38,21 +46,12 @@ namespace Poule
             services.AddScoped<IGameData, SqlGameData>();
             services.AddScoped<IPredictionData, SqlPredictionData>();
 
-            var skipHTTPS = _configuration.GetValue<bool>("LocalTest:skipHTTPS");
-
-            services.Configure<MvcOptions>(options =>
-            {
-                // Set LocalTest:skipHTTPS to true to skip SSL requrement in 
-                // debug mode. This is useful when not using Visual Studio.
-                if (_environment.IsDevelopment() && !skipHTTPS)
-                    options.Filters.Add(new RequireHttpsAttribute());
-            });
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app,
             IConfiguration configuration,
-            IGreeter greeter,
             ILogger<Startup> logger)
         {
             if (_environment.IsDevelopment())
@@ -62,15 +61,18 @@ namespace Poule
                 app.UseDatabaseErrorPage();
             }
 
+            app.UseRewriter((new RewriteOptions()).AddRedirectToHttps());
+
             app.UseStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseMvc(ConfigureRoutes);
 
             app.Run(async context =>
             {
-                var greeting = greeter.GetMessageOfTheDay();
                 context.Response.ContentType = "text/plain";
-                await context.Response.WriteAsync($"{greeting} ({_environment.EnvironmentName})");
+                await context.Response.WriteAsync($"{_environment.EnvironmentName}");
             });
         }
 

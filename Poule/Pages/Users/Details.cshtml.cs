@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Poule.Pages.Users
 {
+    [Authorize]
     public class DetailsModel : PageModel
     {
         private IUserData _UserData;

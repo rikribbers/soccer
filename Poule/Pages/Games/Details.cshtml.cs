@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Poule.Pages.Games
 {
+    [Authorize]
     public class DetailsModel : PageModel
     {
         private IGameData _gameData;

@@ -7,6 +7,7 @@ using Poule.Entities;
 
 namespace Poule.Pages.Games
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly IGameData _gameData;

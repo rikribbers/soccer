@@ -10,6 +10,7 @@ using Poule.Entities;
 
 namespace Poule.Pages
 {
+    [Authorize]
     public class ScoreboardModel : PageModel
     {
         private readonly IPredictionData _predictionData;

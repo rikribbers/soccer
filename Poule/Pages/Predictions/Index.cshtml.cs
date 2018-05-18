@@ -7,6 +7,7 @@ using Poule.Entities;
 
 namespace Poule.Pages.Predictions
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly IPredictionData _PredictionData;

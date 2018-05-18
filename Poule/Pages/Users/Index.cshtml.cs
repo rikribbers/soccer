@@ -7,6 +7,7 @@ using Poule.Entities;
 
 namespace Poule.Pages.Users
 {
+    [Authorize]
     public class IndexModel : PageModel
     {
         private readonly IUserData _UserData;
