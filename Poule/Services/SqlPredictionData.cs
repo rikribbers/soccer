@@ -38,7 +38,8 @@ namespace Poule.Services
 
         public Prediction Update(Prediction prediction)
         {
-            _context.Attach(prediction).State = EntityState.Modified;
+            //_context.Attach(prediction).State = EntityState.Modified;
+            _context.Update(prediction);
             _context.SaveChanges();
             return prediction;
         }

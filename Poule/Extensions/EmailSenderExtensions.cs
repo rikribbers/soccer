@@ -14,7 +14,7 @@ namespace Poule.Extensions
 
         public static Task SendResetPasswordAsync(this IEmailSender emailSender, string email, string callbackUrl)
         {
-            return emailSender.SendEmailAsync(email, "Reset Password",
+            return emailSender.SendEmailAsync(email, "Resetten wachtwoord voor De Voetbalpoule",
                 $"Reset je wachtwoord door <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>hier</a> te klikken.");
         }
     }
