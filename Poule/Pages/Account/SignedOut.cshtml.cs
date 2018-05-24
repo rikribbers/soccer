@@ -2,14 +2,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-public class SignedOutModel : PageModel
+namespace Poule.Pages.Account
 {
-    [AllowAnonymous]
-    public IActionResult OnGet()
+    public class SignedOutModel : PageModel
     {
-        if (User.Identity.IsAuthenticated)
-            return RedirectToPage("/");
-
-        return Page();
+        [AllowAnonymous]
+        public IActionResult OnGet()
+        {
+            return Page();
+        }
     }
 }
