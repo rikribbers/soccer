@@ -29,5 +29,7 @@ namespace Poule.ViewModel
         public string FulltimeScore { get; set; }
 
         public bool Editable { get; set; }
+        public bool IsHalftimeScoreValid { get; set; }
+        public bool IsFulltimeScoreValid { get; set; }
     }
 }

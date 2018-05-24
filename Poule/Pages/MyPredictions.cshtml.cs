@@ -24,7 +24,8 @@ namespace Poule.Pages
         [BindProperty]
         public User MyUser { get; set; }
 
-        public MyPredictionsModel(IPredictionData predictionData, IGameData gameData, IUserData userData, ApplicationDbContext context,
+        public MyPredictionsModel(IPredictionData predictionData, IGameData gameData, IUserData userData,
+            ApplicationDbContext context,
             IAuthorizationService authorizationService,
             UserManager<ApplicationUser> userManager)
             : base(context, authorizationService, userManager)
@@ -60,7 +61,7 @@ namespace Poule.Pages
                 else
                 {
                     prediction.User = MyUser;
-                    Predictions.Add(_predictionData.ToMyPredictionEditModel(prediction,currentTime));
+                    Predictions.Add(_predictionData.ToMyPredictionEditModel(prediction, currentTime));
                 }
             }
         }
@@ -81,11 +82,7 @@ namespace Poule.Pages
                     else
                         _predictionData.Update(p);
                 }
-            if (ModelState.IsValid) 
-                return RedirectToPage("MyPredictions", new {id = MyUser.Id});
-
-            FillController(MyUser.Id);
-            return Page();
+            return RedirectToPage("MyPredictions");
         }
     }
 }

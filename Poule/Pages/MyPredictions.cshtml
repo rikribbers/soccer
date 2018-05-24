@@ -34,7 +34,14 @@
                         {
                             <input disabled asp-for="@Model.Predictions[i].HalftimeScore"/>
                         }
-                        <span class="text-danger" asp-validation-for="@Model.Predictions[i].HalftimeScore"></span>
+                        @if (!Model.Predictions[i].IsHalftimeScoreValid)
+                        {
+                            <span class="text-danger" asp-validation-for="@Model.Predictions[i].HalftimeScore"><-- NIET GOED</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger" asp-validation-for="@Model.Predictions[i].HalftimeScore"></span>                            
+                        }
                     </td>
                     <td>
                         @if (Model.Predictions[i].Editable)
@@ -45,10 +52,17 @@
                         {
                             <input disabled asp-for="@Model.Predictions[i].FulltimeScore"/>
                         }
-                        <span class="text-danger" asp-validation-for="@Model.Predictions[i].FulltimeScore"></span>
+                        @if (!Model.Predictions[i].IsFulltimeScoreValid)
+                        {
+                            <span class="text-danger" asp-validation-for="@Model.Predictions[i].FulltimeScore"><-- NIET GOED</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger" asp-validation-for="@Model.Predictions[i].FulltimeScore"></span>                            
+                        }
                     </td>
                     <td>
-                        <input type="hidden" asp-for="@Model.Predictions[i].Id"/>
+                        @Html.HiddenFor(m => m.Predictions[i].Id)
                     </td>
                     <td>
                         <input type="hidden" asp-for="@Model.Predictions[i].GameId"/>

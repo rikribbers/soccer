@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using Poule.Data;
 using Poule.Models;
@@ -11,10 +12,15 @@ namespace Poule.Services
     public class SqlPredictionData : IPredictionData
     {
         private readonly ApplicationDbContext _context;
+        private static Regex _scoreRegex;
 
         public SqlPredictionData(ApplicationDbContext context)
         {
             _context = context;
+
+            var pattern = @"^[0-9]{1,3}-[0-9]{1,3}$";
+            _scoreRegex = new Regex(pattern);
+
         }
 
         public IEnumerable<Prediction> GetAll()
@@ -38,7 +44,6 @@ namespace Poule.Services
 
         public Prediction Update(Prediction prediction)
         {
-            //_context.Attach(prediction).State = EntityState.Modified;
             _context.Update(prediction);
             _context.SaveChanges();
             return prediction;
@@ -91,7 +96,9 @@ namespace Poule.Services
                 HomeTeam = prediction.Game.HomeTeam,
                 AwayTeam = prediction.Game.AwayTeam,
                 HalftimeScore = prediction.HalftimeScore,
+                IsHalftimeScoreValid = IsValidScore(prediction.HalftimeScore),
                 FulltimeScore = prediction.FulltimeScore,
+                IsFulltimeScoreValid = IsValidScore(prediction.FulltimeScore),
                 Editable = isEditable(currentTime, prediction.Game)
             };
         }
@@ -104,7 +111,10 @@ namespace Poule.Services
                 GameId = game.Id,
                 HomeTeam = game.HomeTeam,
                 AwayTeam = game.AwayTeam,
+                IsHalftimeScoreValid = false,
+                IsFulltimeScoreValid = false,
                 Editable = isEditable(currentTime, game)
+                
             };
         }
 
@@ -122,6 +132,12 @@ namespace Poule.Services
         {
             // only editable until 1h before start of game;
             return time.Add(TimeSpan.FromHours(1)).CompareTo(game.Date) <= 0;
+        }
+
+        public static bool IsValidScore(string score)
+        {
+            if (score != null) return _scoreRegex.IsMatch(score);
+            return false;
         }
     }
 }
