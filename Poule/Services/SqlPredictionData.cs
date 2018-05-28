@@ -73,7 +73,9 @@ namespace Poule.Services
         {
             IEnumerable<Prediction> result = _context.Predictions.Where(p => p.User.Id == id);
             if (result == null)
+            _logger.LogInformation ("results == null");
                 return new List<Prediction>();
+            _logger.LogInformation ("results"  + result.Count )
             return result;
         }
 

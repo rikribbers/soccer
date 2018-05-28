@@ -53,19 +53,14 @@ namespace Poule.Pages
         private void FillController(int id)
         {
             Predictions = new List<MyPredictionEditModel>();
-            _logger.LogInformation("FillController.Id " + id);
             
             var games = _gameData.GetAll();
             MyUser = _userData.Get(id);
-            _logger.LogInformation("MyUser " + MyUser);
-            _logger.LogInformation("MyUser.Id " + MyUser.Id);
             
             var currentTime = DateTime.Now;
             foreach (var game in games)
             {
-                _logger.LogInformation("Game " + game);
-                _logger.LogInformation("Game.Id " + game.Id);
-                var prediction = _predictionData.GetForUser(MyUser.Id).FirstOrDefault(p => p.Game.Id == game.Id);
+                var prediction = _predictionData.GetForUser(MyUser.Id).FirstOrDefault( p => p.Game.Id == game.Id);
 
                 if (prediction == null)
                 {
