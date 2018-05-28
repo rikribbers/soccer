@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Poule.Data;
 using Poule.Models;
 using Poule.ViewModel;
+using Microsoft.Extensions.Logging;
 
 namespace Poule.Services
 {
@@ -13,11 +14,13 @@ namespace Poule.Services
     {
         private readonly ApplicationDbContext _context;
         private readonly IScoreValidator _scoreValidator;
-
-        public SqlPredictionData(ApplicationDbContext context, IScoreValidator scoreValidator)
+        private readonly ILogger _logger;
+        
+        public SqlPredictionData(ApplicationDbContext context, IScoreValidator scoreValidator, ILogger<SqlPredictionData> logger)
         {
             _context = context;
             _scoreValidator = scoreValidator;
+            _logger = logger;
         }
 
         public IEnumerable<Prediction> GetAll()
@@ -75,7 +78,7 @@ namespace Poule.Services
             if (result == null)
             _logger.LogInformation ("results == null");
                 return new List<Prediction>();
-            _logger.LogInformation ("results"  + result.Count )
+            _logger.LogInformation ("results"  + result.Count );
             return result;
         }
 
