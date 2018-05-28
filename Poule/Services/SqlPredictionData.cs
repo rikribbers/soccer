@@ -72,13 +72,14 @@ namespace Poule.Services
             return entity;
         }
 
-        public IEnumerable<Prediction> GetForUser(int id)
+        public Prediction GetForUser(int userId,int gameId)
         {
-            IEnumerable<Prediction> result = _context.Predictions.Where(p => p.User.Id == id);
+            var result = _context.Predictions.Where(p => p.User.Id == userId).FirstOrDefault( p => p.Game.Id == gameId);
             if (result == null)
-            _logger.LogInformation ("results == null");
-                return new List<Prediction>();
-            _logger.LogInformation ("results"  + result.Count );
+            {
+                _logger.LogInformation ("results == null");
+                return result;
+            }
             return result;
         }
 

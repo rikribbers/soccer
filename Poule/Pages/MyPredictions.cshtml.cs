@@ -60,8 +60,8 @@ namespace Poule.Pages
             var currentTime = DateTime.Now;
             foreach (var game in games)
             {
-                var prediction = _predictionData.GetForUser(MyUser.Id).FirstOrDefault( p => p.Game.Id == game.Id);
-
+                var prediction = _predictionData.GetForUser(MyUser.Id,game.Id);
+                
                 if (prediction == null)
                 {
                     Predictions.Add(_predictionData.ToMyPredictionEditModel(game, currentTime));

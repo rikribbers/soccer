@@ -16,7 +16,7 @@ namespace Poule.Services
         MyPredictionEditModel ToMyPredictionEditModel(Game game, DateTime currentTime);
         Prediction ToEntity(PredictionEditModel prediction, int id = 0);
         Prediction ToEntity(MyPredictionEditModel prediction, int id = 0);
-        IEnumerable<Prediction> GetForUser(int id);
+        Prediction GetForUser(int userId,int gameId);
         void Remove(Prediction prediction);
     }
 }
