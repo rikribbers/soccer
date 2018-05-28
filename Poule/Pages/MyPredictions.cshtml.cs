@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
 
 namespace Poule.Pages
 {
@@ -17,7 +18,7 @@ namespace Poule.Pages
         private readonly IPredictionData _predictionData;
         private readonly IGameData _gameData;
         private readonly IUserData _userData;
-
+        private readonly ILogger _logger;
         [BindProperty]
         public List<MyPredictionEditModel> Predictions { get; set; }
 
@@ -27,18 +28,24 @@ namespace Poule.Pages
         public MyPredictionsModel(IPredictionData predictionData, IGameData gameData, IUserData userData,
             ApplicationDbContext context,
             IAuthorizationService authorizationService,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            ILogger<MyPredictionsModel> logger)
             : base(context, authorizationService, userManager)
         {
             _predictionData = predictionData;
             _gameData = gameData;
             _userData = userData;
+            _logger = logger;
         }
 
         public IActionResult OnGet()
         {
             var email = User.Identity.Name;
+            _logger.LogInformation("User.Identity=" + User.Identity);
+            _logger.LogInformation("User.Identity.Name=" + User.Identity.Name);
+            
             var id = _userData.Get(email).Id;
+            _logger.LogInformation("MyUser.Id=" + id);
             FillController(id);
             return Page();
         }
@@ -46,12 +53,18 @@ namespace Poule.Pages
         private void FillController(int id)
         {
             Predictions = new List<MyPredictionEditModel>();
-
+            _logger.LogInformation("FillController.Id " + id);
+            
             var games = _gameData.GetAll();
             MyUser = _userData.Get(id);
+            _logger.LogInformation("MyUser " + MyUser);
+            _logger.LogInformation("MyUser.Id " + MyUser.Id);
+            
             var currentTime = DateTime.Now;
             foreach (var game in games)
             {
+                _logger.LogInformation("Game " + game);
+                _logger.LogInformation("Game.Id " + game.Id);
                 var prediction = _predictionData.GetForUser(MyUser.Id).FirstOrDefault(p => p.Game.Id == game.Id);
 
                 if (prediction == null)
