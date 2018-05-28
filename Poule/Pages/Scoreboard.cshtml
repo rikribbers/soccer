@@ -1,4 +1,4 @@
-﻿@page   
+﻿@page
 @model Poule.Pages.ScoreboardModel
 @{
     Layout = "_LayoutPoule";
@@ -9,19 +9,20 @@
 <div class="container">
     <table class="table table-striped">
         <thead>
-            <tr>
-                <th>Volgorde</th>
-                <th>Datum</th>
-                <th>Thuisteam</th>
-                <th>Uitteam</th>
-                <th>Ruststand</th>
-                <th>Eindstand</th>
-                @foreach (var u in Model.Users)
-                {
-                    <th colspan="3">@u.Name</th>
-                }
-            </tr>
+        <tr>
+            <th>Volgorde</th>
+            <th>Datum</th>
+            <th>Thuisteam</th>
+            <th>Uitteam</th>
+            <th>Ruststand</th>
+            <th>Eindstand</th>
+            @foreach (var u in Model.Users)
+            {
+                <th colspan="3">@u.Name</th>
+            }
+        </tr>
         </thead>
+        <tbody>
         @foreach (var game in Model.Games)
         {
             <tr>
@@ -41,14 +42,18 @@
                 }
             </tr>
         }
+
+        </tbody>
         <tfoot>
-        <th colspan="5"></th>
-        <th>Totaal</th>
-        @foreach (var u in Model.Users)
-        {
-            <th colspan="2"></th>
-            <th>@Model.TotalScores[u.Id]</th>
-        }
+        <tr>
+            <th colspan="5"></th>
+            <th>Totaal</th>
+            @foreach (var u in Model.Users)
+            {
+                <th colspan="2"></th>
+                <th>@Model.TotalScores[u.Id]</th>
+            }
+        </tr>
         </tfoot>
     </table>
 </div>

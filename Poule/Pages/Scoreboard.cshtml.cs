@@ -15,6 +15,7 @@ namespace Poule.Pages
     {
         private readonly IPredictionData _predictionData;
         private readonly IUserData _userData;
+        private IScoreCalculator _scoreCalculator;
         public IEnumerable<Prediction> Predictions { get; set; }
         public IEnumerable<Game> Games { get; set; }
 
@@ -22,12 +23,14 @@ namespace Poule.Pages
         public Dictionary<int,int> TotalScores { get; set; }
 
         public ScoreboardModel(IPredictionData predictionData,IUserData userData, ApplicationDbContext context,
-            IAuthorizationService authorizationService,
+            IAuthorizationService authorizationService, IScoreCalculator scoreCalculator,
             UserManager<ApplicationUser> userManager)
             : base(context, authorizationService, userManager)
         {
             _predictionData = predictionData;
             _userData = userData;
+            _scoreCalculator = scoreCalculator;
+
         }
 
         public IActionResult OnGet()
@@ -41,7 +44,7 @@ namespace Poule.Pages
                 var total = 0;
                 foreach (var p in Predictions.Where(p => p.User.Id == user.Id))
                 {
-                    total += CalculateScore(p.Game.HalftimeScore, p.Game.FulltimeScore, p.HalftimeScore,
+                    total += _scoreCalculator.Calculate(p.Game.HalftimeScore, p.Game.FulltimeScore, p.HalftimeScore,
                         p.FulltimeScore);
                 }
                 TotalScores.Add(user.Id,total);
@@ -58,18 +61,10 @@ namespace Poule.Pages
             {
                 score.HalftimeScore = prediction.HalftimeScore;
                 score.FulltimeScore = prediction.FulltimeScore;
-                score.Points  = CalculateScore(game.HalftimeScore, game.FulltimeScore, prediction.HalftimeScore,prediction.FulltimeScore);
+                score.Points  = _scoreCalculator.Calculate(game.HalftimeScore, game.FulltimeScore, prediction.HalftimeScore,prediction.FulltimeScore);
             };
             return score;
         }
 
-        private int CalculateScore(string gameHalftimeScore, string gameFulltimeScore, string predictionHalftimeScore, string predictionFulltimeScore)
-        {
-            int points = 0;
-            if (gameHalftimeScore!= null && gameHalftimeScore.Equals(predictionHalftimeScore)) points++;
-            if (gameFulltimeScore != null && gameFulltimeScore.Equals(predictionFulltimeScore)) points++;
-            if (points == 2) points++;
-            return points;
-        }
     }
 }

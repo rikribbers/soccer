@@ -12,15 +12,12 @@ namespace Poule.Services
     public class SqlPredictionData : IPredictionData
     {
         private readonly ApplicationDbContext _context;
-        private static Regex _scoreRegex;
+        private readonly IScoreValidator _scoreValidator;
 
-        public SqlPredictionData(ApplicationDbContext context)
+        public SqlPredictionData(ApplicationDbContext context, IScoreValidator scoreValidator)
         {
             _context = context;
-
-            var pattern = @"^[0-9]{1,3}-[0-9]{1,3}$";
-            _scoreRegex = new Regex(pattern);
-
+            _scoreValidator = scoreValidator;
         }
 
         public IEnumerable<Prediction> GetAll()
@@ -96,10 +93,10 @@ namespace Poule.Services
                 HomeTeam = prediction.Game.HomeTeam,
                 AwayTeam = prediction.Game.AwayTeam,
                 HalftimeScore = prediction.HalftimeScore,
-                IsHalftimeScoreValid = IsValidScore(prediction.HalftimeScore),
+                IsHalftimeScoreValid = _scoreValidator.IsValid(prediction.HalftimeScore),
                 FulltimeScore = prediction.FulltimeScore,
-                IsFulltimeScoreValid = IsValidScore(prediction.FulltimeScore),
-                Editable = isEditable(currentTime, prediction.Game)
+                IsFulltimeScoreValid = _scoreValidator.IsValid(prediction.FulltimeScore),
+                Editable = _scoreValidator.IsEditable(currentTime, prediction.Game)
             };
         }
 
@@ -113,8 +110,7 @@ namespace Poule.Services
                 AwayTeam = game.AwayTeam,
                 IsHalftimeScoreValid = false,
                 IsFulltimeScoreValid = false,
-                Editable = isEditable(currentTime, game)
-                
+                Editable = _scoreValidator.IsEditable(currentTime, game)
             };
         }
 
@@ -126,18 +122,6 @@ namespace Poule.Services
             entity.FulltimeScore = prediction.FulltimeScore;
             entity.HalftimeScore = prediction.HalftimeScore;
             return entity;
-        }
-
-        private bool isEditable(DateTime time, Game game)
-        {
-            // only editable until 1h before start of game;
-            return time.Add(TimeSpan.FromHours(1)).CompareTo(game.Date) <= 0;
-        }
-
-        public static bool IsValidScore(string score)
-        {
-            if (score != null) return _scoreRegex.IsMatch(score);
-            return false;
         }
     }
 }

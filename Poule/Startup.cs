@@ -51,6 +51,12 @@ namespace Poule
             services.AddScoped<IGameData, SqlGameData>();
             services.AddScoped<IPredictionData, SqlPredictionData>();
 
+            services.AddSingleton<IScoreValidator,
+                ScoreValidator>();
+            services.AddSingleton<IScoreCalculator,
+                ScoreCalculator>();
+
+
             var skipHTTPS = Configuration.GetValue<bool>("LocalTest:skipHTTPS");
             // requires using Microsoft.AspNetCore.Mvc;
             services.Configure<MvcOptions>(options =>
