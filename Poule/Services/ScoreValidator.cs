@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using Poule.Models;
+using static System.Int32;
 
 namespace Poule.Services
 {
@@ -22,14 +23,62 @@ namespace Poule.Services
 
         public bool IsValid(string score)
         {
-            if (score != null) return _scoreRegex.IsMatch(score);
-            return false;
+            if (string.IsNullOrEmpty(score))
+                return false;
+            return _scoreRegex.IsMatch(score);
         }
- 
+
         public bool IsEditable(DateTime time, Game game)
         {
             // only editable until 1h before start of game;
-            return time.Add(TimeSpan.FromHours(1)).CompareTo(game.Date) <= 0;
+            return time.Add(TimeSpan.FromHours(1)).CompareTo(game.Date) < 0;
+        }
+
+        public bool IsValidFulltimeScore(string halftimeScore, string fulltimeScore)
+        {
+            if (string.IsNullOrEmpty(halftimeScore) || string.IsNullOrEmpty(fulltimeScore) ||
+                !_scoreRegex.IsMatch(fulltimeScore))
+                return false;
+
+            // fulltime score is valid and halftime score is not null
+            var splittedFulltime = fulltimeScore.Split("-");
+            var splittedHalftime = halftimeScore.Split("-");
+
+
+            if (splittedHalftime.Length > 0)
+            {
+                if (string.IsNullOrEmpty(splittedHalftime[0]) ||
+                    string.IsNullOrEmpty(splittedFulltime[0]))
+                    return false;
+                int score = -9999;
+                if (TryParse(splittedHalftime[0], out score) && Parse(splittedFulltime[0]) < score )
+                    return false;
+            }
+
+            if (splittedHalftime.Length > 1)
+            {
+                if (string.IsNullOrEmpty(splittedHalftime[1]) ||
+                    string.IsNullOrEmpty(splittedFulltime[1]))
+                    return false;
+                int score = -9999;
+                if (TryParse(splittedHalftime[1], out score) && Parse(splittedFulltime[1]) < score)
+                {
+                    return false;
+                }
+                else
+                {
+                    // only if all checks succeed return true
+                    return true;
+                }
+            }
+
+            if (splittedHalftime.Length > 2)
+            {
+                return false;
+            }
+            // splitting did something strange here,
+            // just ignore and return false; 
+            return false;
         }
     }
 }

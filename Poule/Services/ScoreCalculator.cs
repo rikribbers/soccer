@@ -16,8 +16,8 @@ namespace Poule.Services
         public int Calculate(string gameHalftimeScore, string gameFulltimeScore, string predictionHalftimeScore, string predictionFulltimeScore)
         {
             int points = 0;
-            if (gameHalftimeScore != null && gameHalftimeScore.Equals(predictionHalftimeScore)) points++;
-            if (gameFulltimeScore != null && gameFulltimeScore.Equals(predictionFulltimeScore)) points++;
+            if (!string.IsNullOrEmpty(gameHalftimeScore) && gameHalftimeScore.Equals(predictionHalftimeScore)) points++;
+            if (!string.IsNullOrEmpty(gameFulltimeScore) && gameFulltimeScore.Equals(predictionFulltimeScore)) points++;
             if (points == 2) points++;
             return points;
         }
