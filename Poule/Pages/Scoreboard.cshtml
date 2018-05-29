@@ -7,7 +7,7 @@
 }
 <p></p>
 <div class="container">
-    <table class="table table-striped">
+    <table class="table table-striped table-sm">
         <thead>
         <tr>
             <th>Volgorde</th>
@@ -18,7 +18,15 @@
             <th>Eindstand</th>
             @foreach (var u in Model.Users)
             {
-                <th colspan="3">@u.Name</th>
+                <th>@u.Name</th>
+            }
+        </tr>
+        <tr>
+            <th colspan="5"></th>
+            <th>Totaal</th>
+            @foreach (var u in Model.Users)
+            {
+                <th>@Model.TotalScores[u.Id]</th>
             }
         </tr>
         </thead>
@@ -36,9 +44,11 @@
                 {
                     var p = Model.GetScoreForUser(game, u.Id);
 
-                    <td>@p.HalftimeScore</td>
-                    <td>@p.FulltimeScore</td>
-                    <td>@p.Points</td>
+                    <td nowrap>
+                        <div><small>r: </small>@p.HalftimeScore</div>
+                        <div><small>e: </small>@p.FulltimeScore</div>
+                        <div><small>p: </small>@p.Points</div>
+                    </td>
                 }
             </tr>
         }
@@ -50,7 +60,6 @@
             <th>Totaal</th>
             @foreach (var u in Model.Users)
             {
-                <th colspan="2"></th>
                 <th>@Model.TotalScores[u.Id]</th>
             }
         </tr>

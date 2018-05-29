@@ -43,10 +43,11 @@ namespace Poule.Pages.Account.Manage
         {
             [Required]
             [EmailAddress]
+            [Display(Name = "Emailadres")]
             public string Email { get; set; }
 
             [Phone]
-            [Display(Name = "Phone number")]
+            [Display(Name = "Telefoonnummer")]
             public string PhoneNumber { get; set; }
         }
 

@@ -15,7 +15,7 @@ namespace Poule.Pages
     {
         private readonly IPredictionData _predictionData;
         private readonly IUserData _userData;
-        private IScoreCalculator _scoreCalculator;
+        private readonly IScoreCalculator _scoreCalculator;
         public IEnumerable<Prediction> Predictions { get; set; }
         public IEnumerable<Game> Games { get; set; }
 
