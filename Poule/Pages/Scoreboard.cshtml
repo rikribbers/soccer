@@ -45,9 +45,18 @@
                     var p = Model.GetScoreForUser(game, u.Id);
 
                     <td nowrap>
-                        <div><small style="color:lightgray">r: </small>@p.HalftimeScore</div>
-                        <div><small style="color:lightgray">e: </small>@p.FulltimeScore</div>
-                        <div><small style="color:lightgray">p: </small>@p.Points</div>
+                        <div style="width: 15px; max-width: 15px;">
+                            <small style="color: lightgray;">r:</small>
+                            @p.HalftimeScore
+                        </div>
+                        <div style="width: 15px; max-width: 15px;">
+                            <small style="color: lightgray;">e: </small>
+                            @p.FulltimeScore
+                        </div>
+                        <div style="width: 15px; max-width: 15px;">
+                            <small style="color: lightgray;">p: </small>
+                            @p.Points
+                        </div>
                     </td>
                 }
             </tr>
