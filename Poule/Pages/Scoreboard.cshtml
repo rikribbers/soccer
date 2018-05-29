@@ -34,26 +34,26 @@
         @foreach (var game in Model.Games)
         {
             <tr>
-                <td>@game.Order</td>
-                <td>@game.Date</td>
-                <td>@game.HomeTeam</td>
-                <td>@game.AwayTeam</td>
-                <td>@game.HalftimeScore</td>
-                <td>@game.FulltimeScore</td>
+                <td nowrap>@game.Order</td>
+                <td nowrap>@game.Date</td>
+                <td nowrap>@game.HomeTeam</td>
+                <td nowrap>@game.AwayTeam</td>
+                <td nowrap>@game.HalftimeScore</td>
+                <td nowrap>@game.FulltimeScore</td>
                 @foreach (var u in Model.Users)
                 {
                     var p = Model.GetScoreForUser(game, u.Id);
 
                     <td nowrap>
-                        <div style="width: 15px; max-width: 15px;">
+                        <div style="width: 60px; max-width: 60px;">
                             <small style="color: lightgray;">r:</small>
                             @p.HalftimeScore
                         </div>
-                        <div style="width: 15px; max-width: 15px;">
+                        <div style="width: 60px; max-width: 60px; ">
                             <small style="color: lightgray;">e: </small>
                             @p.FulltimeScore
                         </div>
-                        <div style="width: 15px; max-width: 15px;">
+                        <div style="width: 60px; max-width: 60px;">
                             <small style="color: lightgray;">p: </small>
                             @p.Points
                         </div>
