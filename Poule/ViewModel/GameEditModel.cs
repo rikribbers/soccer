@@ -6,6 +6,9 @@ namespace Poule.ViewModel
 {
     public class GameEditModel
     {
+        [Display(Name = "Id")]
+        public int Id { get; set; }
+
         [Required]
         [Display(Name = "Volgorde")]
         public int Order { get; set; }
@@ -20,6 +23,7 @@ namespace Poule.ViewModel
 
         [Required]
         [Display(Name = "Datum")]
+        // This is in local timezone
         public DateTime Date { get; set; }
 
         [Display(Name = "Ruststand")]

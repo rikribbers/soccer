@@ -16,27 +16,35 @@ namespace Poule.Pages
         private readonly IPredictionData _predictionData;
         private readonly IUserData _userData;
         private readonly IScoreCalculator _scoreCalculator;
+        private IGameConverter _gameConverter;
         public IEnumerable<Prediction> Predictions { get; set; }
-        public IEnumerable<Game> Games { get; set; }
+        public ICollection<GameEditModel> Games { get; set; }
 
         public IEnumerable<User> Users { get; set; }
         public Dictionary<int,int> TotalScores { get; set; }
 
         public ScoreboardModel(IPredictionData predictionData,IUserData userData, ApplicationDbContext context,
             IAuthorizationService authorizationService, IScoreCalculator scoreCalculator,
+            IGameConverter gameConverter,
             UserManager<ApplicationUser> userManager)
             : base(context, authorizationService, userManager)
         {
             _predictionData = predictionData;
             _userData = userData;
             _scoreCalculator = scoreCalculator;
+            _gameConverter = gameConverter;
 
         }
 
         public IActionResult OnGet()
         {
             Predictions = _predictionData.GetAll();
-            Games = Predictions.Select(p => p.Game).Distinct().OrderBy(g => g.Order);
+            var EntityGames = Predictions.Select(p => p.Game).Distinct().OrderBy(g => g.Order);
+            Games = new List<GameEditModel>();
+            foreach (var game in EntityGames)
+            {
+                Games.Add(_gameConverter.ToEditModel(game));
+            }
             Users = _userData.GetAll();
             TotalScores = new Dictionary<int, int>();
             foreach (var user in Users)
@@ -52,7 +60,7 @@ namespace Poule.Pages
             return Page();
         }
 
-        public ScoreModel GetScoreForUser(Game game, int user)
+        public ScoreModel GetScoreForUser(GameEditModel game, int user)
         {
             // return ordered list of predictions for a game
             var prediction =  Predictions.Where(p => p.Game.Id == game.Id).FirstOrDefault( p => p.User.Id == user);

@@ -6,6 +6,7 @@ namespace Poule.ViewModel
     public class PredictionEditModel
     {
         [Display(Name = "Datum")]
+        // This is in local timezone
         public DateTime Date { get; set; }
 
         [Display(Name = "Thuisteam")]

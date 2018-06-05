@@ -9,18 +9,20 @@ namespace Poule.Pages.Games
     [Authorize(Roles = "PouleAdministrators")]
     public class DetailsModel : PageModel
     {
-        private IGameData _gameData;
+        private readonly IGameData _gameData;
+        private readonly IGameConverter _gameConverter;
 
         public GameEditModel Game { get; set; }
 
-        public DetailsModel(IGameData gameData)
+        public DetailsModel(IGameData gameData,IGameConverter gameConverter)
         {
             _gameData = gameData;
+            _gameConverter = gameConverter;
         }
 
         public IActionResult OnGet(int id)
         {
-            Game = _gameData.ToEditModel(_gameData.Get(id));
+            Game = _gameConverter.ToEditModel(_gameData.Get(id));
             if (Game == null)
             {
                 return NotFound();

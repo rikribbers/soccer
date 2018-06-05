@@ -9,7 +9,8 @@ namespace Poule.Pages.Games
     [Authorize(Roles = "PouleAdministrators")]
     public class CreateModel : PageModel
     {
-        private IGameData _gameData;
+        private readonly IGameData _gameData;
+        private readonly IGameConverter _gameConverter;
 
         [BindProperty]
         public int Id { get; set; }
@@ -17,9 +18,10 @@ namespace Poule.Pages.Games
         [BindProperty]
         public GameEditModel Game { get; set; }
 
-        public CreateModel(IGameData gameData)
+        public CreateModel(IGameData gameData, IGameConverter gameConvertor)
         {
             _gameData = gameData;
+            _gameConverter = gameConvertor;
         }
 
         public IActionResult OnGet()
@@ -32,7 +34,7 @@ namespace Poule.Pages.Games
         {
             if (ModelState.IsValid)
             {
-                var g  = _gameData.Add(_gameData.ToEntity(Game));
+                var g  = _gameData.Add(_gameConverter.ToEntity(Game));
                 return RedirectToAction("Details", "Games", new {id = g.Id});
             }
             return Page();

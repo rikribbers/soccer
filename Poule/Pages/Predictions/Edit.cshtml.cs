@@ -12,7 +12,8 @@ namespace Poule.Pages.Predictions
     [Authorize(Roles = "PouleAdministrators")]
     public class EditModel : BasePageModel
     {
-        private readonly IPredictionData _PredictionData;
+        private readonly IPredictionData _predictionData;
+        private readonly IPredictionConverter _predictionConverter;
 
         [BindProperty]
         public int Id { get; set; }
@@ -21,16 +22,18 @@ namespace Poule.Pages.Predictions
         public PredictionEditModel Prediction { get; set; }
 
         public EditModel(IPredictionData PredictionData,
+            IPredictionConverter predictionConverter,
             ApplicationDbContext context,
             IAuthorizationService authorizationService,
             UserManager<ApplicationUser> userManager) : base(context, authorizationService, userManager)
         {
-            _PredictionData = PredictionData;
+            _predictionData = PredictionData;
+            _predictionConverter = predictionConverter;
         }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            Prediction = _PredictionData.ToPredictionEditModel(_PredictionData.Get(id));
+            Prediction = _predictionConverter.ToPredictionEditModel(_predictionData.Get(id));
             Id = id;
             if (Prediction == null)
                 return RedirectToAction("Index", "Home");
@@ -55,7 +58,7 @@ namespace Poule.Pages.Predictions
                 if (!isAuthorized.Succeeded)
                     return new ChallengeResult();
 
-                _PredictionData.Update(_PredictionData.ToEntity(Prediction, Id));
+                _predictionData.Update(_predictionConverter.ToEntity(Prediction,Context, Id));
                 return RedirectToAction("Details", "Predictions", new {id = Id});
             }
             return Page();

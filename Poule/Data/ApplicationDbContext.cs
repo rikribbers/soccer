@@ -4,7 +4,15 @@ using Poule.Models;
 
 namespace Poule.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public interface IApplicationDbContext
+    {
+        DbSet<Contact> Contact { get; set; }
+        DbSet<Game> Games { get; set; }
+        DbSet<User> MyUsers { get; set; }
+        DbSet<Prediction> Predictions { get; set; }
+    }
+
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>, IApplicationDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)

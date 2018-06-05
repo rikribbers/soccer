@@ -12,6 +12,7 @@ namespace Poule.ViewModel
         public int GameId { get; set; }
 
         [Display(Name = "Datum")]
+        // This is in local timezone
         public DateTime Date { get; set; }
 
         [Display(Name = "Thuisteam")]

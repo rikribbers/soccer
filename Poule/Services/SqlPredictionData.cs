@@ -49,29 +49,6 @@ namespace Poule.Services
             return prediction;
         }
 
-        public PredictionEditModel ToPredictionEditModel(Prediction prediction)
-        {
-            return new PredictionEditModel
-            {
-                Date = prediction.Game.Date,
-                HomeTeam = prediction.Game.HomeTeam,
-                AwayTeam = prediction.Game.AwayTeam,
-                Username = prediction.User.Name,
-                HalftimeScore = prediction.HalftimeScore,
-                FulltimeScore = prediction.FulltimeScore
-            };
-        }
-
-        public Prediction ToEntity(PredictionEditModel prediction, int id)
-        {
-            var entity = _context.Predictions.FirstOrDefault(p => p.Id == id) ?? new Prediction();
-
-            entity.Id = id;
-            entity.FulltimeScore = prediction.FulltimeScore;
-            entity.HalftimeScore = prediction.HalftimeScore;
-            return entity;
-        }
-
         public Prediction GetForUser(int userId,int gameId)
         {
             var result = _context.Predictions.Where(p => p.User.Id == userId).FirstOrDefault( p => p.Game.Id == gameId);
@@ -87,47 +64,6 @@ namespace Poule.Services
         {
             _context.Remove(prediction);
             _context.SaveChanges();
-        }
-
-        public MyPredictionEditModel ToMyPredictionEditModel(Prediction prediction, DateTime currentTime)
-        {
-            return new MyPredictionEditModel
-            {
-                Id = prediction.Id,
-                GameId = prediction.Game.Id,
-                Date = prediction.Game.Date,
-                HomeTeam = prediction.Game.HomeTeam,
-                AwayTeam = prediction.Game.AwayTeam,
-                HalftimeScore = prediction.HalftimeScore,
-                IsHalftimeScoreValid = _scoreValidator.IsValid(prediction.HalftimeScore),
-                FulltimeScore = prediction.FulltimeScore,
-                IsFulltimeScoreValid = _scoreValidator.IsValid(prediction.FulltimeScore),
-                Editable = _scoreValidator.IsEditable(currentTime, prediction.Game)
-            };
-        }
-
-        public MyPredictionEditModel ToMyPredictionEditModel(Game game, DateTime currentTime)
-        {
-            return new MyPredictionEditModel
-            {
-                Date = game.Date,
-                GameId = game.Id,
-                HomeTeam = game.HomeTeam,
-                AwayTeam = game.AwayTeam,
-                IsHalftimeScoreValid = false,
-                IsFulltimeScoreValid = false,
-                Editable = _scoreValidator.IsEditable(currentTime, game)
-            };
-        }
-
-        public Prediction ToEntity(MyPredictionEditModel prediction, int id)
-        {
-            var entity = _context.Predictions.FirstOrDefault(p => p.Id == id) ?? new Prediction();
-
-            entity.Id = prediction.Id;
-            entity.FulltimeScore = prediction.FulltimeScore;
-            entity.HalftimeScore = prediction.HalftimeScore;
-            return entity;
         }
     }
 }

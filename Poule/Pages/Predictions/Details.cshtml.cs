@@ -9,18 +9,20 @@ namespace Poule.Pages.Predictions
     [Authorize(Roles = "PouleAdministrators")]
     public class DetailsModel : PageModel
     {
-        private IPredictionData _PredictionData;
+        private IPredictionData _predictionData;
+        private IPredictionConverter _converter;
 
         public PredictionEditModel Prediction { get; set; }
 
-        public DetailsModel(IPredictionData PredictionData)
+        public DetailsModel(IPredictionData PredictionData,IPredictionConverter  converter)
         {
-            _PredictionData = PredictionData;
+            _predictionData = PredictionData;
+            _converter = converter;
         }
 
         public IActionResult OnGet(int id)
         {
-            Prediction = _PredictionData.ToPredictionEditModel(_PredictionData.Get(id));
+            Prediction = _converter.ToPredictionEditModel(_predictionData.Get(id));
             if (Prediction == null)
             {
                 return NotFound();

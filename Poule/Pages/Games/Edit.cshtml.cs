@@ -10,6 +10,7 @@ namespace Poule.Pages.Games
     public class EditModel : PageModel
     {
         private readonly IGameData _gameData;
+        private readonly IGameConverter _gameConverter;
 
         [BindProperty]
         public int Id { get; set; }
@@ -17,14 +18,15 @@ namespace Poule.Pages.Games
         [BindProperty]
         public GameEditModel Game { get; set; }
 
-        public EditModel(IGameData gameData)
+        public EditModel(IGameData gameData, IGameConverter gameConverter)
         {
             _gameData = gameData;
+            _gameConverter = gameConverter;
         }
 
         public IActionResult OnGet(int id)
         {
-            Game = _gameData.ToEditModel(_gameData.Get(id));
+            Game = _gameConverter.ToEditModel(_gameData.Get(id));
             Id = id;
             if (Game == null)
                 return RedirectToAction("Index", "Home");
@@ -36,7 +38,7 @@ namespace Poule.Pages.Games
         {
             if (ModelState.IsValid)
             {
-                _gameData.Update(_gameData.ToEntity(Game, Id));
+                _gameData.Update(_gameConverter.ToEntity(Game, Id));
                 return RedirectToAction("Details", "Games", new {id = Id});
             }
             return Page();

@@ -10,7 +10,5 @@ namespace Poule.Services
         Game Get(int id);
         Game Add(Game newGame);
         Game Update(Game game);
-        GameEditModel ToEditModel(Game game);
-        Game ToEntity(GameEditModel game, int id = 0);
     }
 }

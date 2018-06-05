@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Poule.Data;
@@ -38,37 +39,6 @@ namespace Poule.Services
             _context.Attach(game).State = EntityState.Modified;
             _context.SaveChanges();
             return game;
-        }
-
-        public GameEditModel ToEditModel(Game game)
-        {
-            return new GameEditModel
-            {
-                Order = game.Order,
-                Date = game.Date,
-                Round = game.Round,
-                HomeTeam = game.HomeTeam,
-                AwayTeam = game.AwayTeam,
-                HalftimeScore = game.HalftimeScore,
-                FulltimeScore = game.FulltimeScore
-            };
-        }
-
-        public Game ToEntity(GameEditModel game, int id)
-        {
-            var g = new Game
-            {
-                Order = game.Order,
-                Date = game.Date,
-                Round = game.Round,
-                HomeTeam = game.HomeTeam,
-                AwayTeam = game.AwayTeam,
-                HalftimeScore = game.HalftimeScore,
-                FulltimeScore = game.FulltimeScore
-            };
-            if (id > 0)
-                g.Id = id;
-            return g;
         }
     }
 }

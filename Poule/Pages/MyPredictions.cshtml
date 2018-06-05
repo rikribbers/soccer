@@ -9,6 +9,7 @@
 <div class="container">
     <form method="post">
         <input type="hidden" asp-for="@Model.MyUser.Id"/>
+        
         <table class="table table-striped">
             <thead>
             <tr>
@@ -17,6 +18,9 @@
                 <th>Uitteam</th>
                 <th>Ruststand</th>
                 <th>Eindstand</th>
+            </tr>
+            <tr>
+                <th colspan="5"><input type="submit" name="save" value="Opslaan" /></th>
             </tr>
             </thead>
             @for (var i = 0; i < Model.Predictions.Count(); i++)
@@ -36,7 +40,7 @@
                         }
                         @if (!Model.Predictions[i].IsHalftimeScoreValid)
                         {
-                            <span class="text-danger" asp-validation-for="@Model.Predictions[i].HalftimeScore"><-- NIET GOED</span>
+                            <span class="text-danger" asp-validation-for="@Model.Predictions[i].HalftimeScore">< -- NIET GOED</span>
                         }
                         else
                         {
@@ -54,7 +58,7 @@
                         }
                         @if (!Model.Predictions[i].IsFulltimeScoreValid)
                         {
-                            <span class="text-danger" asp-validation-for="@Model.Predictions[i].FulltimeScore"><-- NIET GOED</span>
+                            <span class="text-danger" asp-validation-for="@Model.Predictions[i].FulltimeScore">< -- NIET GOED</span>
                         }
                         else
                         {
@@ -70,6 +74,6 @@
                 </tr>
             }
         </table>
-        <input type="submit" name="save" value="Save"/>
+        <input type="submit" name="save" value="Opslaan"/>
     </form>
 </div>

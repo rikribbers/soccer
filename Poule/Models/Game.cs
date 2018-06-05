@@ -17,6 +17,7 @@ namespace Poule.Models
         public string AwayTeam { get; set; }
 
         [Required]
+        // This is in UTC time
         public DateTime Date { get; set; }
 
         public string HalftimeScore { get; set; }

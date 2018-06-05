@@ -9,7 +9,6 @@ using System;
 
 namespace Poule
 {
-    #region snippet
     public class Program
     {
         public static void Main(string[] args)
@@ -17,7 +16,7 @@ namespace Poule
             var host = BuildWebHost(args);
 
             using (var scope = host.Services.CreateScope())
-            {
+            {   
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<ApplicationDbContext>();
                 context.Database.Migrate();
@@ -52,5 +51,4 @@ namespace Poule
                 .UseStartup<Startup>()
                 .Build();
     }
-    #endregion
 }

@@ -77,6 +77,8 @@ namespace Poule
             });
 
             services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddSingleton<IGameConverter, GameConverter>();
+            services.AddSingleton<IPredictionConverter, PredictionConverter>();
 
             services.AddMvc(config =>
             {

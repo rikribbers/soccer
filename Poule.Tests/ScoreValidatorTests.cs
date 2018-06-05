@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using Poule.Models;
 using Poule.Services;
@@ -8,22 +10,31 @@ namespace Poule.Tests
     [TestFixture]
     public class ScoreValidatorTests
     {
+        public ScoreValidator ScoreValidator { get; set; }
+
         [SetUp]
         public void Setup()
         {
+            var dict = new Dictionary<string, string>
+            {
+                {"PredictionChangesAllowedUntil:First", "2018-06-12T00:00:00.000"}
+            };
+
+            var builder = new ConfigurationBuilder();
+            builder.AddInMemoryCollection(dict);
+            ScoreValidator = new ScoreValidator(builder.Build());
         }
 
         [TestCase("")]
         [TestCase("-")]
         [TestCase("0")]
         [TestCase("00")]
-        [TestCase("00")]
         [TestCase("000")]
         [TestCase("0000")]
         [TestCase("-0")]
         [TestCase("-00")]
         [TestCase("-000")]
-        [TestCase("-000")]
+        [TestCase("-0000")]
         [TestCase("0-0000")]
         [TestCase("00-0000")]
         [TestCase("000-0000")]
@@ -47,10 +58,9 @@ namespace Poule.Tests
         [TestCase("0-0--")]
         public void ShouldNotBeValid(string score)
         {
-            var sut = new ScoreValidator();
-
-            Assert.False(sut.IsValid(score));
-            Assert.False(sut.IsValidFulltimeScore("0-0", score));
+            
+            Assert.False(ScoreValidator.IsValid(score));
+            Assert.False(ScoreValidator.IsValidFulltimeScore("0-0", score));
         }
 
         [TestCase("0-0")]
@@ -65,60 +75,85 @@ namespace Poule.Tests
         [TestCase("999-9")]
         public void ShouldBeValid(string score)
         {
-            var sut = new ScoreValidator();
-
-            Assert.True(sut.IsValid(score));
-            Assert.True(sut.IsValidFulltimeScore("0-0", score));
+            
+            Assert.True(ScoreValidator.IsValid(score));
+            Assert.True(ScoreValidator.IsValidFulltimeScore("0-0", score));
         }
 
         [Test]
         public void FullTimeScoreShouldBeInvalid()
         {
-            var sut = new ScoreValidator();
-
-            Assert.False(sut.IsValidFulltimeScore("1-0", "0-0"));
-            Assert.False(sut.IsValidFulltimeScore("0-1", "0-0"));
+            Assert.False(ScoreValidator.IsValidFulltimeScore("1-0", "0-0"));
+            Assert.False(ScoreValidator.IsValidFulltimeScore("0-1", "0-0"));
         }
 
         [Test]
         public void FullTimeScoreShouldBeValid()
         {
-            var sut = new ScoreValidator();
+            Assert.True(ScoreValidator.IsValidFulltimeScore("1-0", "1-0"));
+            Assert.True(ScoreValidator.IsValidFulltimeScore("0-1", "0-1"));
 
-            Assert.True(sut.IsValidFulltimeScore("1-0", "1-0"));
-            Assert.True(sut.IsValidFulltimeScore("0-1", "0-1"));
-
-            Assert.True(sut.IsValidFulltimeScore("1-0", "2-0"));
-            Assert.True(sut.IsValidFulltimeScore("0-1", "0-2"));
+            Assert.True(ScoreValidator.IsValidFulltimeScore("1-0", "2-0"));
+            Assert.True(ScoreValidator.IsValidFulltimeScore("0-1", "0-2"));
         }
 
         [Test]
-        public void IsEditableOneSecondBeforeHour()
+        public void IsEditableOneSecondBeforeHourFinal()
         {
-            var sut = new ScoreValidator();
-            Assert.True(sut.IsEditable(new DateTime(2018, 6, 4, 18, 59, 59), new Game
+            Assert.True(ScoreValidator.IsEditable(new DateTime(2018, 6, 4, 16, 59, 59), new Game
             {
-                Date = new DateTime(2018, 6, 4, 20, 0, 0)
+                Date = new DateTime(2018, 6, 4, 20, 0, 0),
+                Round = RoundType.Finale
             }));
         }
 
         [Test]
-        public void IsEditableAtExactOneHourBeforeGame()
+        public void IsEditableAtExactOneHourBeforeGameFinal()
         {
-            var sut = new ScoreValidator();
-            Assert.False(sut.IsEditable(new DateTime(2018, 6, 4, 19, 0, 0), new Game
+            Assert.False(ScoreValidator.IsEditable(new DateTime(2018, 6, 4, 17, 0, 0), new Game
             {
-                Date = new DateTime(2018, 6, 4, 20, 0, 0)
+                Date = new DateTime(2018, 6, 4, 20, 0, 0),
+                Round = RoundType.Finale
             }));
         }
 
         [Test]
-        public void IsEditableAtExactOneSecondAfterHour()
+        public void IsEditableAtExactOneSecondAfterHourFinal()
         {
-            var sut = new ScoreValidator();
-            Assert.False(sut.IsEditable(new DateTime(2018, 6, 4, 19, 0, 1), new Game
+            Assert.False(ScoreValidator.IsEditable(new DateTime(2018, 6, 4, 17, 0, 1), new Game
             {
-                Date = new DateTime(2018, 6, 4, 20, 0, 0)
+                Date = new DateTime(2018, 6, 4, 20, 0, 0),
+                Round = RoundType.Finale
+            }));
+        }
+
+        [Test]
+        public void IsEditableOneSecondBeforeHourFirst()
+        {
+            Assert.True(ScoreValidator.IsEditable(new DateTime(2018, 6, 11, 23, 59, 59), new Game
+            {
+                Date = new DateTime(2018, 6, 4, 20, 0, 0),
+                Round = RoundType.First
+            }));
+        }
+
+        [Test]
+        public void IsEditableAtExactOneHourBeforeGameFirst()
+        {
+            Assert.False(ScoreValidator.IsEditable(new DateTime(2018, 6, 12, 0, 0, 0), new Game
+            {
+                Date = new DateTime(2018, 6, 4, 20, 0, 0),
+                Round = RoundType.First
+            }));
+        }
+
+        [Test]
+        public void IsEditableAtExactOneSecondAfterHourFirst()
+        {
+            Assert.False(ScoreValidator.IsEditable(new DateTime(2018, 6, 12, 0, 0, 1), new Game
+            {
+                Date = new DateTime(2018, 6, 4, 20, 0, 0),
+                Round = RoundType.First
             }));
         }
     }
