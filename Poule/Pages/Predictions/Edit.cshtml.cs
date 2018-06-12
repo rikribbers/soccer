@@ -38,11 +38,11 @@ namespace Poule.Pages.Predictions
             if (Prediction == null)
                 return RedirectToAction("Index", "Home");
 
-            var isAuthorized = await AuthorizationService.AuthorizeAsync(
-                User, Prediction,
-                PouleOperations.Update);
-            if (!isAuthorized.Succeeded)
-                return new ChallengeResult();
+//            var isAuthorized = await AuthorizationService.AuthorizeAsync(
+//                User, Prediction,
+//                PouleOperations.Update);
+//            if (!isAuthorized.Succeeded)
+//                return new ChallengeResult();
 
             return Page();
         }
@@ -52,11 +52,11 @@ namespace Poule.Pages.Predictions
         {
             if (ModelState.IsValid)
             {
-                var isAuthorized = await AuthorizationService.AuthorizeAsync(
-                    User, Prediction,
-                    PouleOperations.Update);
-                if (!isAuthorized.Succeeded)
-                    return new ChallengeResult();
+//                var isAuthorized = await AuthorizationService.AuthorizeAsync(
+//                   User, Prediction,
+//                    PouleOperations.Update);
+//                if (!isAuthorized.Succeeded)
+//                    return new ChallengeResult();
 
                 _predictionData.Update(_predictionConverter.ToEntity(Prediction,Context, Id));
                 return RedirectToAction("Details", "Predictions", new {id = Id});

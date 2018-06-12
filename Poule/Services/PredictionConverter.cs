@@ -73,12 +73,15 @@ namespace Poule.Services
         {
             return new PredictionEditModel
             {
+                Id = prediction.Id,
                 Date = TimeZoneInfo.ConvertTimeFromUtc(prediction.Game.Date, TimeZoneInfo.Local),
                 HomeTeam = prediction.Game.HomeTeam,
                 AwayTeam = prediction.Game.AwayTeam,
                 Username = prediction.User.Name,
                 HalftimeScore = prediction.HalftimeScore,
-                FulltimeScore = prediction.FulltimeScore
+                FulltimeScore = prediction.FulltimeScore,
+                IsHalftimeScoreValid = _scoreValidator.IsValid(prediction.HalftimeScore),
+                IsFulltimeScoreValid = _scoreValidator.IsValid(prediction.FulltimeScore)
             };
         }
     }

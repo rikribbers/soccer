@@ -13,28 +13,52 @@
             <th>Uitteam</th>
             <th>Naam</th>
             <th>Ruststand</th>
+            <th></th>
             <th>Eindstand</th>
+            <th></th>
         </tr>
         </thead>
         @foreach (var item in Model.Predictions)
         {
-            <tr>
-                <td>@item.Game.Date</td>
-                <td>@item.Game.HomeTeam</td>
-                <td>@item.Game.AwayTeam</td>
-                <td>@item.User.Name</td>
-                <td>@item.HalftimeScore</td>
-                <td>@item.FulltimeScore</td>
-                <td>
-                    <a asp-page="Details" asp-route-id="@item.Id">Details</a>
-                </td>
-                <td>
-                    <a asp-page="Edit" asp-route-id="@item.Id">Edit</a>
-                </td>
-                <td>
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
+        <tr>
+            <td>@item.Date</td>
+            <td>@item.HomeTeam</td>
+            <td>@item.AwayTeam</td>
+            <td>@item.Username</td>
+            <td>@item.HalftimeScore</td>
+            <td>
+
+                @if (!item.IsHalftimeScoreValid)
+                {
+                    <span class="text-danger">< -- NIET GOED</span>
+                }
+                else
+                {
+                    <span class="text-danger"></span>
+                }
+            </td>
+            <td>@item.FulltimeScore</td>
+            <td>
+
+                @if (!item.IsFulltimeScoreValid)
+                {
+                    <span class="text-danger">< -- NIET GOED</span>
+                }
+                else
+                {
+                    <span class="text-danger"></span>
+                }
+            </td>
+            <td>
+                <a asp-page="Details" asp-route-id="@item.Id">Details</a>
+            </td>
+            <td>
+                <a asp-page="Edit" asp-route-id="@item.Id">Edit</a>
+            </td>
+            <td>
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
         }
     </table>
 </div>

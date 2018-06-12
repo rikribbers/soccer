@@ -95,9 +95,6 @@ namespace Poule
                 PouleAdminPredictionAuthorizationHandler>();
         
 
-            services.AddSingleton<IAuthorizationHandler,
-                PouleGameManagersAuthorizationHandler>();
-
             // Mail
             var smtpConfig = Configuration.GetSection("EmailConfiguration")
                 .Get<EmailConfiguration>();

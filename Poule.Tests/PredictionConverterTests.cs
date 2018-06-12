@@ -57,6 +57,7 @@ namespace Poule.Tests
                     Name = "MeMyselfAndI",
                     Order = 40
                 }
+
             };
 
             var predictionEditModel = _sut.ToPredictionEditModel(prediction);
@@ -65,7 +66,8 @@ namespace Poule.Tests
             Assert.AreEqual("AwayTeam", predictionEditModel.AwayTeam);
             Assert.AreEqual("3-4", predictionEditModel.FulltimeScore);
             Assert.AreEqual("1-2", predictionEditModel.HalftimeScore);
-
+            Assert.IsTrue(predictionEditModel.IsFulltimeScoreValid);
+            Assert.IsTrue(predictionEditModel.IsHalftimeScoreValid);
             // Date should be converted from UTC to localtime
             // localtime is in CEST so +2 hours
             Assert.AreEqual(predictionEditModel.Date, new DateTime(2018, 5, 30, 11, 24, 37));
@@ -80,6 +82,7 @@ namespace Poule.Tests
         [Test]
         public void ShouldConvertGameAndTimeToPredcitionEditModel()
         {
+            Assert.True(true);
         }
 
         [Test]

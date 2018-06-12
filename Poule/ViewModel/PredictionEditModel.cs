@@ -5,6 +5,9 @@ namespace Poule.ViewModel
 {
     public class PredictionEditModel
     {
+
+        public int Id { get; set; }
+
         [Display(Name = "Datum")]
         // This is in local timezone
         public DateTime Date { get; set; }
@@ -27,5 +30,8 @@ namespace Poule.ViewModel
         [Required]
         [RegularExpression("^[0-9]{1,3}-[0-9]{1,3}$")]
         public string FulltimeScore { get; set; }
+
+        public bool IsHalftimeScoreValid { get; set; }
+        public bool IsFulltimeScoreValid { get; set; }
     }
 }
