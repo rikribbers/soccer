@@ -81,7 +81,7 @@ namespace Poule.Services
                 HalftimeScore = prediction.HalftimeScore,
                 FulltimeScore = prediction.FulltimeScore,
                 IsHalftimeScoreValid = _scoreValidator.IsValid(prediction.HalftimeScore),
-                IsFulltimeScoreValid = _scoreValidator.IsValid(prediction.FulltimeScore)
+                IsFulltimeScoreValid = _scoreValidator.IsValidFulltimeScore(prediction.HalftimeScore, prediction.FulltimeScore)
             };
         }
     }
