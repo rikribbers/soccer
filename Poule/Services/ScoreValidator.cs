@@ -9,6 +9,7 @@ namespace Poule.Services
     public interface IScoreValidator
     {
         bool IsValid(string score);
+        bool IsValidFulltimeScore(string halftimeScore, string fulltimeScore);
         bool IsEditable(DateTime time, Game game);
     }
 

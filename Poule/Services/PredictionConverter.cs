@@ -30,7 +30,7 @@ namespace Poule.Services
                 HalftimeScore = prediction.HalftimeScore,
                 IsHalftimeScoreValid = _scoreValidator.IsValid(prediction.HalftimeScore),
                 FulltimeScore = prediction.FulltimeScore,
-                IsFulltimeScoreValid = _scoreValidator.IsValid(prediction.FulltimeScore),
+                IsFulltimeScoreValid = _scoreValidator.IsValidFulltimeScore(prediction.HalftimeScore,prediction.FulltimeScore),
                 Editable = _scoreValidator.IsEditable(currentTime, prediction.Game)
             };
         }

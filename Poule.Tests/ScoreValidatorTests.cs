@@ -85,6 +85,8 @@ namespace Poule.Tests
         {
             Assert.False(ScoreValidator.IsValidFulltimeScore("1-0", "0-0"));
             Assert.False(ScoreValidator.IsValidFulltimeScore("0-1", "0-0"));
+            Assert.False(ScoreValidator.IsValidFulltimeScore("1-0", "0-1"));
+            Assert.False(ScoreValidator.IsValidFulltimeScore("0-1", "1-0"));
         }
 
         [Test]
