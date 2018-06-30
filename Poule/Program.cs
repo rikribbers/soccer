@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
+using Microsoft.IdentityModel.Protocols;
+using Poule.Services;
+using StackExchange.Redis;
 
 namespace Poule
 {
@@ -16,12 +19,11 @@ namespace Poule
             var host = BuildWebHost(args);
 
             using (var scope = host.Services.CreateScope())
-            {   
+            {
                 var services = scope.ServiceProvider;
                 var context = services.GetRequiredService<ApplicationDbContext>();
                 context.Database.Migrate();
 
-                // requires using Microsoft.Extensions.Configuration;
                 var config = host.Services.GetRequiredService<IConfiguration>();
                 // Set password with the Secret Manager tool.
                 // dotnet user-secrets set SeedUserPW <pw>
@@ -41,10 +43,28 @@ namespace Poule
                     logger.LogError(ex, "An error occurred while seeding the database.");
                     throw ex;
                 }
+
+
+                var redis = config["Redis:host"];
+                LazyConnection = new Lazy<ConnectionMultiplexer>(() =>  ConnectionMultiplexer.Connect(redis));
+         
+                var predictionData = services.GetRequiredService<IPredictionData>();
+                predictionData.InitCache();
+
+
+
             }
 
             host.Run();
+
+            LazyConnection.Value.Dispose();
         }
+
+        public static Lazy<ConnectionMultiplexer> LazyConnection;
+        
+    
+        public static ConnectionMultiplexer Connection => LazyConnection.Value;
+
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)

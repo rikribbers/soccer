@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Poule.Services
 {
-    public class SqlPredictionData : IPredictionData
+    public class SqlPredictionData : ISqlPredictionData
     {
         private readonly ApplicationDbContext _context;
         private readonly IScoreValidator _scoreValidator;
@@ -64,6 +64,11 @@ namespace Poule.Services
         {
             _context.Remove(prediction);
             _context.SaveChanges();
+        }
+
+        public bool InitCache()
+        {
+            throw new NotImplementedException();
         }
     }
 }

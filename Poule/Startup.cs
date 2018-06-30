@@ -49,7 +49,8 @@ namespace Poule
 
             services.AddScoped<IUserData, SqlUserData>();
             services.AddScoped<IGameData, SqlGameData>();
-            services.AddScoped<IPredictionData, SqlPredictionData>();
+            services.AddScoped<ISqlPredictionData, SqlPredictionData>();
+            services.AddScoped<IPredictionData, CachedPredictionData>();
 
             services.AddSingleton<IScoreValidator,
                 ScoreValidator>();
