@@ -85,7 +85,7 @@ namespace Poule.Services
         public bool InitCache()
         {
             // clear all predictions in cache
-            var iserver = Program.LazyConnection.Value.GetEndPoints()[0];
+                var iserver = Program.LazyConnection.Value.GetEndPoints()[0];
             var server = Program.LazyConnection.Value.GetServer(iserver);
             var cache = Program.LazyConnection.Value.GetDatabase();
 
