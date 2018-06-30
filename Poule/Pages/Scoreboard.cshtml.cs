@@ -43,7 +43,10 @@ namespace Poule.Pages
             Games = new List<GameEditModel>();
             foreach (var game in EntityGames)
             {
-                Games.Add(_gameConverter.ToEditModel(game));
+                if (Games.All(g => g.Id != game.Id))
+                {
+                    Games.Add(_gameConverter.ToEditModel(game));
+                }
             }
             Users = _userData.GetAll();
             TotalScores = new Dictionary<int, int>();
